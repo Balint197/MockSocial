@@ -31,6 +31,7 @@ MockSocial is a web application that generates high-fidelity social media chat m
 - **No database required**: State fully encoded in URL for sharing
 - **Smart content generation**: Random content via faker.js + AI-powered contextual conversations via Gemini
 - **Animated Exports**: Generate native rolling `.gif` videos simulating realistic chat scrolling directly on the client
+- **Saved Mockups**: Persistent named snapshots of any mockup configuration with one-click restore, stored in `localStorage` via Zustand persist
 
 ---
 
@@ -157,10 +158,11 @@ The store uses a **sliced pattern** to separate concerns and keep code maintaina
 
 ```
 useChatStore (Combined Store)
-    ├── createAppSlice     → Global app settings
-    ├── createChatSlice    → Chat-specific data
-    ├── createPostSlice    → Post-specific data
-    └── Middleware         → Persistence + Actions
+    ├── createAppSlice          → Global app settings
+    ├── createChatSlice         → Chat-specific data
+    ├── createPostSlice         → Post-specific data
+    ├── createSavedMockupsSlice → Named mockup snapshots (save/load/delete)
+    └── Middleware              → Persistence + Actions
 ```
 
 ### Slices Overview
@@ -216,6 +218,36 @@ interface PostSlice {
 }
 ```
 
+#### 4. Saved Mockups Slice (`src/store/slices/createSavedMockupsSlice.ts`)
+
+```typescript
+interface SavedMockup {
+  id: string;
+  name: string;
+  createdAt: number; // unix ms timestamp
+  platform: Platform;
+  mockupType: MockupType;
+  contact: Contact;
+  messages: Message[];
+  statusBar: StatusBarConfig;
+  postConfig: PostConfig;
+  isDarkMode: boolean;
+  wallpaper: string | null;
+  phoneStyle: PhoneStyle;
+}
+
+interface SavedMockupsSlice {
+  savedMockups: SavedMockup[];
+
+  // Actions
+  saveMockup: (name: string) => void;  // Snapshot current state
+  loadMockup: (id: string) => void;    // Restore a saved snapshot
+  deleteMockup: (id: string) => void;
+}
+```
+
+Saves are **prepended** (newest first) and **fully persisted** to `localStorage` alongside all other state.
+
 ### Persistence
 
 The store uses Zustand's `persist` middleware to save to localStorage:
@@ -236,6 +268,11 @@ export const useChatStore = create<ChatState>()(
     },
     {
       name: 'chat-mockup-storage',
+      version: 2, // Bumped when savedMockups was added
+      migrate: (persistedState, version) => {
+        if (version < 2) persistedState.savedMockups = [];
+        return persistedState;
+      },
       partialize: (state) => ({
         // Only persist essential data
         mockupType: state.mockupType,
@@ -246,6 +283,7 @@ export const useChatStore = create<ChatState>()(
         postConfig: state.postConfig,
         isDarkMode: state.isDarkMode,
         showWatermark: state.showWatermark,
+        savedMockups: state.savedMockups, // ← persisted history
       }),
     }
   )
@@ -496,6 +534,7 @@ mock-social/
 │   │   │
 │   │   ├── sidebar/                  # Configuration controls
 │   │   │   ├── Sidebar.tsx           # Main sidebar component
+│   │   │   ├── SavedMockupsPanel.tsx # Saved mockup management panel
 │   │   │   └── SortableMessage.tsx   # Draggable message item
 │   │   │
 │   │   ├── skins/                    # Platform-specific skins
@@ -530,9 +569,10 @@ mock-social/
 │   │
 │   ├── store/                        # Zustand state management
 │   │   ├── slices/
-│   │   │   ├── createAppSlice.ts     # App settings slice
-│   │   │   ├── createChatSlice.ts    # Chat data slice
-│   │   │   └── createPostSlice.ts    # Post data slice
+│   │   │   ├── createAppSlice.ts          # App settings slice
+│   │   │   ├── createChatSlice.ts         # Chat data slice
+│   │   │   ├── createPostSlice.ts         # Post data slice
+│   │   │   └── createSavedMockupsSlice.ts # Saved mockups history slice
 │   │   └── useChatStore.ts           # Combined store
 │   │
 │   ├── lib/                          # Utilities
@@ -559,13 +599,16 @@ mock-social/
 Each platform uses a dedicated component that can be swapped at runtime based on the selected platform.
 
 ### 2. Slice Pattern (State)
-Zustand store is split into logical slices (App, Chat, Post) for maintainability.
+Zustand store is split into logical slices (App, Chat, Post, SavedMockups) for maintainability.
 
 ### 3. Observer Pattern (Store)
 Components subscribe to Zustand store changes and re-render automatically.
 
 ### 4. Server-Side Rendering with Client Hydration
 Next.js handles initial SSR while client components handle interactivity.
+
+### 5. Memento Pattern (Saved Mockups)
+The `SavedMockupsSlice` implements the Memento behavioural pattern: `saveMockup` captures the current store state as an immutable snapshot (memento), and `loadMockup` restores it — without exposing internal state details to the UI layer.
 
 ---
 
@@ -584,6 +627,5 @@ Next.js handles initial SSR while client components handle interactivity.
 - Video support in mockups
 - Custom theme builder
 - Collaboration features
-- Template library
 - AI-generated post content (extend Gemini integration to post mockups)
-- Conversation templates powered by AI presets
+- Cloud sync for Saved Mockups across devices

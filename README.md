@@ -28,7 +28,8 @@ MockSocial offers a premium, pixel-perfect environment for designing realistic s
     *   **Avatar Uploads**: Drag and drop or select local images for user profiles.
     *   **AI Conversation Generator 🤖**: Describe a scenario in natural language and let **Google Gemini** generate an entire realistic conversation — with platform-aware tone, natural message flow, and authentic timing.
     *   **Smart Autofill ✨**: Instantly populate your mockup with realistic, coherent English data (messages, profiles, posts) using the "Magic Wand" tool.
-    *   **Db-Free Sharing 🔗**: Share your creations instantly with a unique link. The entire state is compressed into the URL, requiring no backend or database.
+     *   **Saved Mockups 🔖**: Snapshot the current mockup under a custom name, browse all saves as cards, and restore any of them instantly - all stored locally, no account needed.
+     *   **Db-Free Sharing 🔗**: Share your creations instantly with a unique link. The entire state is compressed into the URL, requiring no backend or database.
 *   **Drag-and-Drop Reordering**:
     *   Effortlessly reorder messages in the sidebar using intuitive drag-and-drop interactions.
 *   **Customization Freedom**:
@@ -79,7 +80,8 @@ src/
 │   │   ├── icons.tsx          # SVG icon definitions
 │   │   └── ...
 │   ├── sidebar/          # Configuration sidebar
-│   │   └── Sidebar.tsx        # Main controls interface
+│   │   ├── Sidebar.tsx        # Main controls interface
+│   │   └── SavedMockupsPanel.tsx # Save/restore mockup snapshots
 │   ├── skins/            # Platform-specific UI implementations
 │   │   ├── WhatsAppSkin.tsx
 │   │   ├── DiscordSkin.tsx
@@ -147,6 +149,7 @@ We use **Zustand** with a sliced architecture for global state management.
 *   **App Slice**: Handles global UI state like the selected `platform`, `isDarkMode`, and `statusBar` settings.
 *   **Chat Slice**: Manages `messages`, `contact` info, and conversation history.
 *   **Post Slice**: Manages configuration for post mockups (`likes`, `comments`, `shares`).
+*   **Saved Mockups Slice**: Manages a named list of full mockup snapshots (`savedMockups`), persisted to `localStorage`. Exposes `saveMockup`, `loadMockup`, and `deleteMockup` actions.
 
 To use the store in a component:
 ```typescript

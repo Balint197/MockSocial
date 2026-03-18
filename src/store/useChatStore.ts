@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { createAppSlice, AppSlice } from './slices/createAppSlice';
 import { createChatSlice, ChatSlice } from './slices/createChatSlice';
 import { createPostSlice, PostSlice } from './slices/createPostSlice';
+import { createSavedMockupsSlice, SavedMockupsSlice } from './slices/createSavedMockupsSlice';
 import { generateRandomContact, generateRandomMessages, generateRandomPost } from '@/lib/autofill-utils';
 
 export type Platform = 'signal' | 'imessage' | 'whatsapp' | 'discord' | 'instagram' | 'messenger' | 'telegram' | 'twitter' | 'slack' | 'teams' | 'x' | 'snapchat' | 'tiktok' | 'linkedin' | 'threads';
@@ -45,7 +46,7 @@ export interface Contact {
 }
 
 // Combine all slice interfaces
-export type ChatState = AppSlice & ChatSlice & PostSlice & {
+export type ChatState = AppSlice & ChatSlice & PostSlice & SavedMockupsSlice & {
   generateRandomContent: () => void;
   resetState: () => void;
   importState: (state: Partial<ChatState>) => void;
@@ -59,6 +60,7 @@ export const useChatStore = create<ChatState>()(
         ...createAppSlice(...a),
         ...createChatSlice(...a),
         ...createPostSlice(...a),
+        ...createSavedMockupsSlice(...a),
         importState: (newState) => {
           set((state) => ({ ...state, ...newState }));
         },
@@ -99,11 +101,15 @@ export const useChatStore = create<ChatState>()(
     },
     {
       name: 'chat-mockup-storage',
-      version: 1, // Add version for future schema migrations
+      version: 2, // Bumped: added savedMockups
       migrate: (persistedState: any, version: number) => {
         if (version === 0) {
-          // If we had old undefined version, ensure phoneStyle is default
+          // Ensure phoneStyle exists for very old state
           persistedState.phoneStyle = 'default';
+        }
+        if (version < 2) {
+          // Seed empty savedMockups array for users upgrading from v1
+          persistedState.savedMockups = [];
         }
         return persistedState as ChatState;
       },
@@ -118,6 +124,7 @@ export const useChatStore = create<ChatState>()(
         isDarkMode: state.isDarkMode,
         showWatermark: state.showWatermark,
         phoneStyle: state.phoneStyle,
+        savedMockups: state.savedMockups,
       }),
     }
   )

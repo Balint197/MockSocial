@@ -33,7 +33,8 @@ import {
   Moon,
   Upload,
   Wand2,
-  LayoutTemplate
+  LayoutTemplate,
+  Bookmark
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableMessage } from "./SortableMessage";
+import { SavedMockupsPanel } from "./SavedMockupsPanel";
 
 import { 
   Accordion, 
@@ -649,6 +651,35 @@ export const Sidebar = () => {
               </AccordionContent>
             </AccordionItem>
             )}
+
+            {/* SAVED MOCKUPS SECTION */}
+            <AccordionItem value="saved" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
+              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
+                    <Bookmark className="w-5 h-5 text-amber-500" strokeWidth={2} />
+                  </div>
+                  <div className="flex flex-col items-start gap-0.5 text-left">
+                    <span className="text-sm font-bold text-foreground leading-none">Saved Mockups</span>
+                    <span className="text-xs font-medium text-muted-foreground">
+                      {store.savedMockups.length === 0
+                        ? 'Save & restore your work'
+                        : `${store.savedMockups.length} saved`}
+                    </span>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4">
+                <motion.div
+                  variants={sectionVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <SavedMockupsPanel />
+                </motion.div>
+              </AccordionContent>
+            </AccordionItem>
+
             {/* TEMPLATES SECTION */}
             {store.mockupType === 'chat' && (
             <AccordionItem value="templates" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
