@@ -185,15 +185,15 @@ export const Sidebar = () => {
 
       {/* ── Sidebar: static panel on desktop, bottom-sheet on mobile ── */}
       <motion.div
-        className="w-full lg:w-[440px] lg:max-w-[440px] lg:h-screen bg-background/95 lg:bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans lg:border-r border-border lg:relative lg:z-20 lg:translate-y-0 shrink-0
+        className="w-full lg:w-[440px] lg:max-w-[440px] lg:h-screen bg-background/95 lg:bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans lg:border-r border-border lg:relative lg:z-50 shrink-0
           fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl shadow-2xl
           lg:static lg:rounded-none lg:shadow-none"
         initial={false}
         animate={{
-          y: isMobileSheetOpen ? 0 : '100%',
+          y: isDesktop ? 0 : (isMobileSheetOpen ? 0 : '100%'),
         }}
         transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-        style={{ maxHeight: isMobileSheetOpen ? '90svh' : undefined }}
+        style={{ maxHeight: isDesktop ? undefined : (isMobileSheetOpen ? '90svh' : undefined) }}
       >
       {/* Header */}
       {/* ── Mobile drag handle ── */}
