@@ -98,6 +98,16 @@ export const Sidebar = () => {
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const { showToast } = useToast();
   const { resolvedTheme } = useTheme();
+
+  // Track whether we're on desktop (≥1024px) so Framer Motion never hides the sidebar there
+  const [isDesktop, setIsDesktop] = React.useState(false);
+  React.useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
   
   // Optional: Auto Sync if enabled
   const [syncTheme, setSyncTheme] = useState(false);
