@@ -37,9 +37,9 @@ Thank you for your interest in contributing to MockSocial! We want to make it as
 MockSocial uses **Next.js 15 (App Router)** and **Zustand** for state management.
 
 - `src/app`: Page routes.
-- `src/components/canvas`: The main phone preview area.
+- `src/components/canvas`: The main phone preview area (`ChatCanvas.tsx` renders the phone frame and dynamically scales it via `ResizeObserver`).
 - `src/components/skins`: Where all the platform-specific UIs live (e.g., `WhatsAppSkin.tsx`).
-- `src/components/sidebar`: The configuration panel.
+- `src/components/sidebar`: The configuration panel. On mobile (`< lg`) the Sidebar renders as a **Framer Motion bottom sheet** triggered by `isMobileSheetOpen` in the store.
 - `src/store`: Global state management.
 - `src/lib`: core utilities including `url-state.ts` (sharing engine) and `autofill-utils.ts` (random data generator).
 - `src/app/api/generate-chat`: AI conversation generator API route (Google Gemini).
@@ -106,6 +106,40 @@ Open `src/components/sidebar/Sidebar.tsx`.
 If your new skin requires **new top-level state fields** in the Zustand store (beyond `messages`, `contact`, etc.), you **must** update `src/lib/url-state.ts`.
 - Add your new field to the `ShareableState` type.
 - This ensures your new feature is preserved when users share a link.
+
+## Mobile Responsiveness
+
+MockSocial is fully mobile-responsive. Please ensure your contributions do not break the mobile experience:
+
+### How it works
+- **`< 1024px`**: The Sidebar is hidden as a **bottom sheet** (fixed, slides up from the bottom). A blue **"Edit"** FAB at `bottom-4 left-4` opens it via `setMobileSheetOpen(true)` in the Zustand store.
+- **`≥ 1024px`**: The Sidebar is a static left panel (unchanged).
+- The phone mockup auto-scales to fit the viewport width using a `ResizeObserver` in `ChatCanvas.tsx`.
+
+### Testing checklist for contributors
+
+Before opening a PR, open Chrome DevTools → Toggle device toolbar (Ctrl+Shift+M) and verify:
+
+- [ ] At **375px**: Phone mockup is fully visible, "Edit" FAB is visible bottom-left
+- [ ] Tapping "Edit" opens the bottom sheet; tapping backdrop closes it
+- [ ] All Sidebar sections are accessible by scrolling within the sheet
+- [ ] At **1280px**: Sidebar is always visible as a left panel (no sheet/FAB)
+- [ ] Download PNG and GIF still work at both breakpoints
+
+### Key mobile files
+
+| File | Role |
+|---|---|
+| `src/app/globals.css` | Mobile `overflow: auto`, tap highlight removal, touch-action, backdrop CSS |
+| `src/store/slices/createAppSlice.ts` | `isMobileSheetOpen` state + `setMobileSheetOpen` action |
+| `src/components/sidebar/Sidebar.tsx` | Bottom-sheet animation, drag handle, backdrop, compact header |
+| `src/components/canvas/ChatCanvas.tsx` | `ResizeObserver` scale, mobile FABs, Edit FAB |
+
+### Screenshots
+
+| Mobile Canvas | Mobile Sheet Open |
+|:---:|:---:|
+| ![Mobile canvas](public/screenshots/mobile-canvas.png) | ![Mobile sheet open](public/screenshots/mobile-sheet-open.png) |
 
 ## Pull Request Guidelines
 

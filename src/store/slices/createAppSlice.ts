@@ -7,6 +7,7 @@ export interface AppSlice {
   statusBar: StatusBarConfig;
   isDarkMode: boolean;
   showWatermark: boolean;
+  isMobileSheetOpen: boolean;
 
   setMockupType: (type: MockupType) => void;
   setPlatform: (platform: Platform) => void;
@@ -19,6 +20,7 @@ export interface AppSlice {
   toggleKeyboard: (show: boolean) => void;
   phoneStyle: 'default' | 'mini' | 'pro';
   setPhoneStyle: (style: 'default' | 'mini' | 'pro') => void;
+  setMobileSheetOpen: (open: boolean) => void;
 }
 
 export const createAppSlice: StateCreator<AppSlice> = (set) => ({
@@ -35,7 +37,8 @@ export const createAppSlice: StateCreator<AppSlice> = (set) => ({
   showWatermark: true,
   wallpaper: null,
   showKeyboard: false,
-  phoneStyle: 'default', // Add the default state
+  phoneStyle: 'default',
+  isMobileSheetOpen: false,
 
   setMockupType: (type) => set({ mockupType: type }),
   setPlatform: (platform) => set({ platform }),
@@ -45,5 +48,7 @@ export const createAppSlice: StateCreator<AppSlice> = (set) => ({
   toggleWatermark: (show) => set({ showWatermark: show }),
   setWallpaper: (url) => set({ wallpaper: url }),
   toggleKeyboard: (show) => set({ showKeyboard: show }),
-  setPhoneStyle: (style) => set({ phoneStyle: style }), // Set logic
+  setPhoneStyle: (style) => set({ phoneStyle: style }),
+  setMobileSheetOpen: (open) => set({ isMobileSheetOpen: open }),
 });
+

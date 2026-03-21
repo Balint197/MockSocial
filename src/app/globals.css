@@ -127,6 +127,15 @@ body {
   font-family: var(--font-sans);
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile: allow scrolling */
+@media (max-width: 1023px) {
+  body {
+    overflow: auto;
+    overflow-x: hidden;
+  }
 }
 
 /* Glassmorphism Utilities */
@@ -191,4 +200,19 @@ body {
 
 .dark .text-gradient {
   background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+}
+
+/* Mobile bottom-sheet backdrop */
+.mobile-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 40;
+}
+
+/* Touch target optimisation */
+button, [role="button"], input[type="range"] {
+  touch-action: manipulation;
 }

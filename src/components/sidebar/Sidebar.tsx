@@ -91,6 +91,7 @@ const platforms: PlatformItem[] = [
 
 export const Sidebar = () => {
   const store = useChatStore();
+  const { isMobileSheetOpen, setMobileSheetOpen } = useChatStore();
   const [newMessageText, setNewMessageText] = useState("");
   const [showAIDialog, setShowAIDialog] = useState(false);
   const [liveTime, setLiveTime] = useState(false);
@@ -156,24 +157,56 @@ export const Sidebar = () => {
   const validPlatforms = platforms.filter(p => p.types.includes(store.mockupType));
 
   return (
-    <div className="w-full lg:w-[440px] lg:max-w-[440px] max-h-[45vh] lg:max-h-none lg:h-screen bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans border-b lg:border-b-0 lg:border-r border-border relative z-20 shrink-0">
+    <>
+      {/* ── Mobile backdrop ── */}
+      <AnimatePresence>
+        {isMobileSheetOpen && (
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mobile-sheet-backdrop lg:hidden"
+            onClick={() => setMobileSheetOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Sidebar: static panel on desktop, bottom-sheet on mobile ── */}
+      <motion.div
+        className="w-full lg:w-[440px] lg:max-w-[440px] lg:h-screen bg-background/95 lg:bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans lg:border-r border-border lg:relative lg:z-20 lg:translate-y-0 shrink-0
+          fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl shadow-2xl
+          lg:static lg:rounded-none lg:shadow-none"
+        initial={false}
+        animate={{
+          y: isMobileSheetOpen ? 0 : '100%',
+        }}
+        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+        style={{ maxHeight: isMobileSheetOpen ? '90svh' : undefined }}
+      >
       {/* Header */}
+      {/* ── Mobile drag handle ── */}
+      <div className="lg:hidden flex justify-center pt-3 pb-1 shrink-0">
+        <div className="w-10 h-1 rounded-full bg-border" />
+      </div>
+
       <motion.div 
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="px-6 py-5 border-b border-border glass sticky top-0 z-50 bg-background/80 backdrop-blur-md"
+        className="px-4 lg:px-6 py-4 lg:py-5 border-b border-border glass sticky top-0 z-50 bg-background/80 backdrop-blur-md"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 lg:mb-6">
           <div className="flex items-center gap-3 group cursor-pointer">
             <motion.div 
               whileHover={{ scale: 1.05, rotate: 3 }}
               whileTap={{ scale: 0.95 }}
-              className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow"
+              className="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow"
             >
-              <span className="text-xl font-black text-primary-foreground tracking-tighter">M</span>
+              <span className="text-lg lg:text-xl font-black text-primary-foreground tracking-tighter">M</span>
             </motion.div>
             <div>
-              <h1 className="text-xl font-extrabold text-foreground tracking-tight leading-none group-hover:text-gradient transition-all">
+              <h1 className="text-lg lg:text-xl font-extrabold text-foreground tracking-tight leading-none group-hover:text-gradient transition-all">
                 MockSocial
               </h1>
               <div className="flex items-center gap-2 mt-0.5">
@@ -182,7 +215,7 @@ export const Sidebar = () => {
             </div>
           </div>
           
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-1 lg:gap-2 items-center">
             <Button
               variant="ghost"
               size="icon"
@@ -233,12 +266,15 @@ export const Sidebar = () => {
             >
                <Trash2 className="w-4 h-4" />
             </Button>
-            <ShareDialog />
-            <UserAuthButton />
-            <Button className="h-9 px-4 rounded-xl font-bold text-xs gap-1.5 bg-foreground text-background shadow-medium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-200">
-              <Sparkles className="w-3.5 h-3.5" />
-              Pro
-            </Button>
+            {/* Share and UserAuth: visible only on desktop to keep mobile header compact */}
+            <span className="hidden lg:contents">
+              <ShareDialog />
+              <UserAuthButton />
+              <Button className="h-9 px-4 rounded-xl font-bold text-xs gap-1.5 bg-foreground text-background shadow-medium hover:shadow-glow hover:-translate-y-0.5 transition-all duration-200">
+                <Sparkles className="w-3.5 h-3.5" />
+                Pro
+              </Button>
+            </span>
           </div>
         </div>
 
@@ -263,8 +299,8 @@ export const Sidebar = () => {
       </motion.div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-5 pb-24 space-y-2">
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="p-4 lg:p-5 pb-24 space-y-2">
           
           <Accordion type="single" collapsible defaultValue="platform" className="space-y-2">
             
@@ -1019,7 +1055,8 @@ export const Sidebar = () => {
 
       {/* AI Chat Dialog */}
       <AIChatDialog open={showAIDialog} onOpenChange={setShowAIDialog} />
-    </div>
+    </motion.div>
+    </>
   );
 };
 

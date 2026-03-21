@@ -15,7 +15,8 @@
 7. [Skin System](#skin-system)
 8. [URL-Based State Sharing](#url-based-state-sharing)
 9. [Smart Autofill System](#smart-autofill-system)
-10. [Project Structure](#project-structure)
+10. [Mobile Responsiveness](#mobile-responsiveness)
+11. [Project Structure](#project-structure)
 
 ---
 
@@ -32,6 +33,7 @@ MockSocial is a web application that generates high-fidelity social media chat m
 - **Smart content generation**: Random content via faker.js + AI-powered contextual conversations via Gemini
 - **Animated Exports**: Generate native rolling `.gif` videos simulating realistic chat scrolling directly on the client
 - **Saved Mockups**: Persistent named snapshots of any mockup configuration with one-click restore, stored in `localStorage` via Zustand persist
+- **Fully Mobile Responsive**: Bottom-sheet sidebar, dynamic viewport-aware mockup scaling, and touch-optimised controls across all device sizes
 
 ---
 
@@ -178,6 +180,7 @@ interface AppSlice {
   showWatermark: boolean;
   wallpaper: string | null;
   showKeyboard: boolean;
+  isMobileSheetOpen: boolean; // Controls the mobile bottom-sheet sidebar
 
   // Actions
   setMockupType: (type: MockupType) => void;
@@ -187,6 +190,7 @@ interface AppSlice {
   toggleWatermark: (show: boolean) => void;
   setWallpaper: (url: string | null) => void;
   toggleKeyboard: (show: boolean) => void;
+  setMobileSheetOpen: (open: boolean) => void;
 }
 ```
 
@@ -336,6 +340,104 @@ export const decodeState = (encoded: string): Partial<ChatState> | null => {
   }
 };
 ```
+
+---
+
+## Mobile Responsiveness
+
+MockSocial is fully responsive and works across all device sizes — from narrow phones (360px) to widescreen desktops.
+
+### Layout Strategy
+
+| Breakpoint | Layout |
+|---|---|
+| `< 1024px` (mobile/tablet) | Canvas-first: phone mockup fills the screen; Sidebar hidden by default as a **bottom sheet** |
+| `≥ 1024px` (desktop) | Side-by-side: Sidebar as a fixed left panel (440px), canvas on the right |
+
+### Sidebar Bottom Sheet (`Sidebar.tsx`)
+
+On mobile, the Sidebar renders as a Framer Motion animated drawer:
+
+```tsx
+<motion.div
+  className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl ..."
+  animate={{ y: isMobileSheetOpen ? 0 : '100%' }}
+  transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+  style={{ maxHeight: isMobileSheetOpen ? '90svh' : undefined }}
+>
+  {/* Drag handle */}
+  <div className="lg:hidden w-10 h-1 rounded-full bg-border mx-auto" />
+  {/* ... sidebar content ... */}
+</motion.div>
+```
+
+- A **blurred backdrop** renders behind the sheet; tapping it closes the sheet
+- Inner content uses `overscroll-contain` to prevent the page scrolling underneath
+- Mobile header is compacted — Share, UserAuth, and Pro buttons are hidden (`hidden lg:contents`) to prevent overflow
+
+### Dynamic Mockup Scaling (`ChatCanvas.tsx`)
+
+A `ResizeObserver` computes the correct scale factor for the phone mockup after every container resize:
+
+```typescript
+const compute = () => {
+  const available = wrapper.clientWidth - 32; // 16px padding each side
+  const scale = Math.min(1, available / getMockupWidth());
+  setDynamicScale(scale);
+};
+compute(); // fires immediately on mount
+const obs = new ResizeObserver(compute);
+obs.observe(wrapper);
+```
+
+- Scale is initialised as `null` on the server to avoid hydration mismatches
+- `suppressHydrationWarning` is set on the styled div as a backstop
+
+### Mobile FABs
+
+| Button | Mobile Position | Desktop Position |
+|---|---|---|
+| GIF export | `bottom-4 right-4` · `44×44px` | `bottom-10 right-10` · `56×56px` |
+| PNG download | `bottom-4 right-4` · `48×48px` | `bottom-10 right-10` · `64×64px` |
+| **Edit** (opens sheet) | `bottom-4 left-4` · primary blue pill | hidden (`lg:hidden`) |
+
+### Store State (`createAppSlice.ts`)
+
+```typescript
+isMobileSheetOpen: boolean;            // default: false
+setMobileSheetOpen: (open: boolean) => void;
+```
+
+### CSS Additions (`globals.css`)
+
+```css
+/* Allow scrolling on mobile */
+@media (max-width: 1023px) {
+  body { overflow: auto; overflow-x: hidden; }
+}
+
+/* Remove tap highlight and 300ms delay */
+body { -webkit-tap-highlight-color: transparent; }
+button, [role="button"] { touch-action: manipulation; }
+
+/* Blurred backdrop for bottom sheet */
+.mobile-sheet-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+}
+```
+
+### Screenshots
+
+| Mobile — Canvas | Mobile — Sheet Open |
+|:---:|:---:|
+| ![Mobile canvas](public/screenshots/mobile-canvas.png) | ![Mobile sheet open](public/screenshots/mobile-sheet-open.png) |
+
+| Desktop — Light | Desktop — Dark |
+|:---:|:---:|
+| ![Desktop light](public/screenshots/desktop-light.png) | ![Desktop dark](public/screenshots/desktop-dark.png) |
 
 ---
 
@@ -629,3 +731,4 @@ The `SavedMockupsSlice` implements the Memento behavioural pattern: `saveMockup`
 - Collaboration features
 - AI-generated post content (extend Gemini integration to post mockups)
 - Cloud sync for Saved Mockups across devices
+- PWA / installable app support for mobile

@@ -39,6 +39,12 @@ MockSocial offers a premium, pixel-perfect environment for designing realistic s
     *   **High-Res PNGs**: One-click generation of high-resolution (2x) PNGs of the entire phone frame.
     *   **Animated GIFs**: Create fluid scrolling `.gif` sequences natively in the browser to deliver video-like proof-of-work arrays.
 
+### Mobile Experience
+*   **Fully Responsive**: Works seamlessly on any device — phone, tablet, or desktop.
+    *   **Canvas-first layout**: On mobile the phone mockup fills the screen; a floating **Edit** button slides up the controls as a bottom sheet.
+    *   **Dynamic scaling**: The mockup auto-scales via `ResizeObserver` to always fit the viewport without horizontal scrolling.
+    *   **Touch-optimised**: Native touch targets, `touch-action: manipulation` for zero tap delay, and `overscroll-contain` inside the sheet.
+
 ---
 
 ## Tech Stack
@@ -98,6 +104,18 @@ src/
 └── lib/                  # Utilities
     └── utils.ts
 ```
+
+---
+
+## Screenshots
+
+| Mobile — Canvas View | Mobile — Editor Sheet Open |
+|:---:|:---:|
+| ![Mobile canvas showing phone mockup with Edit FAB](public/screenshots/mobile-canvas.png) | ![Mobile sidebar sheet slid up from bottom](public/screenshots/mobile-sheet-open.png) |
+
+| Desktop — Light Mode | Desktop — Dark Mode |
+|:---:|:---:|
+| ![Desktop light mode with sidebar and canvas](public/screenshots/desktop-light.png) | ![Desktop dark mode with sidebar and canvas](public/screenshots/desktop-dark.png) |
 
 ---
 

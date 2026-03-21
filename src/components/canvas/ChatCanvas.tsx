@@ -21,7 +21,7 @@ const XPostSkin = dynamic(() => import("../skins/XPostSkin").then(mod => mod.XPo
 const LinkedInPostSkin = dynamic(() => import("../skins/LinkedInPostSkin").then(mod => mod.LinkedInPostSkin));
 const ThreadsPostSkin = dynamic(() => import("../skins/ThreadsPostSkin").then(mod => mod.ThreadsPostSkin));
 import { StatusBar } from "./StatusBar";
-import { Download, Video } from "lucide-react";
+import { Download, Video, SlidersHorizontal } from "lucide-react";
 import { toPng } from "html-to-image";
 import { generateGifFromElements } from "@/lib/export-utils";
 import { WatermarkOverlay } from "./watermark-overlay";
@@ -30,7 +30,34 @@ import { useToast } from "@/components/shared/toast";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 export const ChatCanvas = () => {
-    const { platform, isDarkMode, mockupType, wallpaper, showKeyboard, phoneStyle } = useChatStore();
+    const { platform, isDarkMode, mockupType, wallpaper, showKeyboard, phoneStyle, setMobileSheetOpen } = useChatStore();
+
+    // Dynamic scale: fit mockup to available width on any screen size.
+    // Initialized to null so the server render uses no inline style (avoids hydration mismatch).
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
+    const [dynamicScale, setDynamicScale] = React.useState<number | null>(null);
+
+    const getMockupWidth = React.useCallback(() => {
+        switch (phoneStyle) {
+            case 'mini': return 310;
+            case 'pro': return 375;
+            default: return 340;
+        }
+    }, [phoneStyle]);
+
+    React.useEffect(() => {
+        const wrapper = wrapperRef.current;
+        if (!wrapper) return;
+        const compute = () => {
+            const available = wrapper.clientWidth - 32; // 16px padding each side
+            const scale = Math.min(1, available / getMockupWidth());
+            setDynamicScale(scale);
+        };
+        compute(); // run immediately on mount
+        const obs = new ResizeObserver(compute);
+        obs.observe(wrapper);
+        return () => obs.disconnect();
+    }, [getMockupWidth]);
 
     const getPhoneDimensions = () => {
         switch (phoneStyle) {
@@ -200,9 +227,13 @@ export const ChatCanvas = () => {
         }
     };
     return (
-
-        <div className="flex items-center justify-center py-8 pb-32 lg:p-8 min-h-0 lg:min-h-screen relative w-full">
-            <div id="chat-canvas" className="relative group transition-all duration-500 ease-in-out transform scale-[0.85] sm:scale-90 md:scale-100 hover:md:scale-[1.01] origin-center z-50">
+        <div ref={wrapperRef} className="flex items-center justify-center py-6 pb-28 lg:py-8 lg:pb-32 lg:p-8 min-h-0 lg:min-h-screen relative w-full overflow-x-hidden">
+            <div
+                id="chat-canvas"
+                className="relative group transition-all duration-500 ease-in-out origin-center z-50"
+                suppressHydrationWarning
+                style={dynamicScale !== null ? { transform: `scale(${dynamicScale})`, transformOrigin: 'top center' } : { transformOrigin: 'top center' }}
+            >
                 <div className="absolute -inset-4 bg-gradient-to-tr from-primary/40 via-purple-500/40 to-secondary/40 rounded-[3.5rem] blur-2xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse pointer-events-none" />
                 {/* Phone Frame */}
                 <div className={`relative ${getPhoneDimensions()} bg-[#121212] rounded-[3rem] shadow-[0_0_0_9px_#333333,0_0_0_10px_#000000,0_20px_50px_rgba(0,0,0,0.5)] border-[6px] border-[#222222] overflow-hidden transition-all duration-300`}>
@@ -235,36 +266,47 @@ export const ChatCanvas = () => {
                 </div>
             </div>
 
-            {/* Floating Action Buttons */}
-            <div className="fixed bottom-10 right-10 flex flex-col gap-4 z-50">
+            {/* Floating Action Buttons — Download & GIF */}
+            <div className="fixed bottom-4 right-4 lg:bottom-10 lg:right-10 flex flex-col gap-3 z-50">
                 <button
                     onClick={downloadGif}
                     disabled={isGenerating || isGeneratingGif}
-                    className="group relative flex items-center justify-center w-14 h-14 bg-indigo-600 rounded-2xl shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="group relative flex items-center justify-center w-11 h-11 lg:w-14 lg:h-14 bg-indigo-600 rounded-2xl shadow-xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                     title="Export Animated GIF"
                 >
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {isGeneratingGif ? (
-                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10" />
+                        <div className="w-5 h-5 lg:w-6 lg:h-6 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10" />
                     ) : (
-                        <Video className="w-6 h-6 text-white relative z-10" strokeWidth={2.5} />
+                        <Video className="w-5 h-5 lg:w-6 lg:h-6 text-white relative z-10" strokeWidth={2.5} />
                     )}
                 </button>
                 
                 <button
                     onClick={downloadScreenshot}
                     disabled={isGenerating || isGeneratingGif}
-                    className="group relative flex items-center justify-center w-16 h-16 bg-slate-900 rounded-2xl shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="group relative flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 bg-slate-900 rounded-2xl shadow-2xl hover:scale-105 hover:-translate-y-1 transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
                     title="Download Mockup (PNG)"
                 >
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-700 opacity-0 group-hover:opacity-100 transition-opacity" />
                     {isGenerating ? (
-                        <div className="w-7 h-7 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10" />
+                        <div className="w-5 h-5 lg:w-7 lg:h-7 border-2 border-white/30 border-t-white rounded-full animate-spin relative z-10" />
                     ) : (
-                        <Download className="w-7 h-7 text-white relative z-10" strokeWidth={2.5} />
+                        <Download className="w-5 h-5 lg:w-7 lg:h-7 text-white relative z-10" strokeWidth={2.5} />
                     )}
                 </button>
             </div>
+
+            {/* Edit FAB — mobile only, opens the sidebar bottom sheet */}
+            <button
+                onClick={() => setMobileSheetOpen(true)}
+                className="lg:hidden fixed bottom-4 left-4 z-50 flex items-center gap-2 h-12 px-4 bg-primary text-primary-foreground rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 font-bold text-sm"
+                title="Open Editor"
+            >
+                <SlidersHorizontal className="w-4 h-4" strokeWidth={2.5} />
+                Edit
+            </button>
         </div>
     );
 };
+
