@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { UrlHydrator } from "@/components/shared/url-hydrator";
 import { ToastProvider } from "@/components/shared/toast";
+import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -47,6 +48,7 @@ export default function RootLayout({
               </Suspense>
               {children}
               <SpeedInsights />
+              <Analytics />
               <div className="fixed top-4 right-4 z-[100]">
                 <ThemeToggle />
               </div>
