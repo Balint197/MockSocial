@@ -45,13 +45,7 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSo
 import { SortableMessage } from "./SortableMessage";
 import { SavedMockupsPanel } from "./SavedMockupsPanel";
 
-import { 
-  Accordion, 
-  AccordionContent, 
-  AccordionItem, 
-  AccordionTrigger 
-} from "@/components/ui/accordion";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -312,202 +306,35 @@ export const Sidebar = () => {
       <div className="flex-1 overflow-y-auto overscroll-contain">
         <div className="p-4 lg:p-5 pb-24 space-y-2">
           
-          <Accordion type="single" collapsible defaultValue="platform" className="space-y-2">
-            
-            {/* PLATFORM SECTION */}
-            <AccordionItem value="platform" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group [&[data-state=open]>div>div:first-child]:bg-primary [&[data-state=open]>div>div:first-child>svg]:text-primary-foreground">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-indigo/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <Smartphone className="w-5 h-5 text-section-indigo" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Platform</span>
-                    <span className="text-xs font-medium text-muted-foreground">Select app style</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div 
-                  variants={sectionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  className="grid grid-cols-2 gap-2.5"
-                >
-                  {validPlatforms.map((p, index) => {
-                    const isSelected = store.platform === p.id;
-                    return (
-                      <motion.button
-                        key={p.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                        whileHover={!p.locked ? { scale: 1.02 } : {}}
-                        whileTap={!p.locked ? { scale: 0.98 } : {}}
-                        onClick={() => !p.locked && store.setPlatform(p.id)}
-                        className={cn(
-                          "relative px-3.5 py-3 rounded-xl flex items-center gap-3 transition-all border group text-left",
-                          isSelected
-                            ? 'bg-foreground border-foreground text-background shadow-medium'
-                            : 'bg-card border-border hover:border-primary/30 hover:bg-secondary/50',
-                          p.locked && "opacity-50 cursor-not-allowed hover:border-border hover:bg-card"
-                        )}
-                      >
-                        <span className={cn(
-                          "flex items-center justify-center transition-all duration-200", 
-                          !p.locked && !isSelected && p.color,
-                          isSelected && "text-background",
-                          p.locked && "grayscale"
-                        )}>
-                          {p.icon}
-                        </span>
-                        <div className="flex flex-col min-w-0">
-                          <span className={cn(
-                            "text-sm font-semibold leading-tight truncate",
-                            isSelected ? "text-background" : "text-foreground"
-                          )}>
-                            {p.name}
-                          </span>
-                          {p.locked && (
-                            <span className="text-[10px] font-medium text-muted-foreground">Pro only</span>
-                          )}
-                        </div>
-                        
-                        {p.locked && (
-                          <Lock className="w-3 h-3 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
-                        )}
-                        {isSelected && !p.locked && (
-                          <CheckCircle2 className="w-4 h-4 text-background absolute right-3 top-1/2 -translate-y-1/2" strokeWidth={2.5} />
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </motion.div>
-              </AccordionContent>
-            </AccordionItem>
+          
+          <Tabs defaultValue="content" className="w-full">
+            <TabsList className="w-full h-11 bg-secondary gap-1 rounded-xl p-1 mb-4">
+              <TabsTrigger 
+                value="content" 
+                className="flex-1 rounded-lg gap-2 text-xs font-bold data-[state=active]:bg-background data-[state=active]:shadow-soft transition-all"
+              >
+                Content
+              </TabsTrigger>
+              <TabsTrigger 
+                value="design" 
+                className="flex-1 rounded-lg gap-2 text-xs font-bold data-[state=active]:bg-background data-[state=active]:shadow-soft transition-all"
+              >
+                Design
+              </TabsTrigger>
+              <TabsTrigger 
+                value="saved" 
+                className="flex-1 rounded-lg gap-2 text-xs font-bold data-[state=active]:bg-background data-[state=active]:shadow-soft transition-all"
+              >
+                Saved
+              </TabsTrigger>
+            </TabsList>
 
-            {/* TYPE SECTION */}
-            <AccordionItem value="type" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-blue/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <MessageSquare className="w-5 h-5 text-section-blue" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Type</span>
-                    <span className="text-xs font-medium text-muted-foreground">Message style</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div
-                  variants={sectionVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  <button className="w-full bg-secondary/50 border border-border px-4 py-3.5 rounded-xl text-sm font-semibold text-foreground flex justify-between items-center cursor-pointer hover:border-primary/30 hover:bg-secondary transition-all group">
-                    <span className="flex items-center gap-3">
-                      <span className="relative flex h-2.5 w-2.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-section-green opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-section-green"></span>
-                      </span>
-                      Direct Message
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
-                  </button>
-                </motion.div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* POST CONFIGURATION SECTION */}
-            {store.mockupType === 'post' && (
-              <AccordionItem value="post_config" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-                <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                      <Share2 className="w-5 h-5 text-pink-500" strokeWidth={2} />
-                    </div>
-                    <div className="flex flex-col items-start gap-0.5 text-left">
-                      <span className="text-sm font-bold text-foreground leading-none">Post Content</span>
-                      <span className="text-xs font-medium text-muted-foreground">Main content & metrics</span>
-                    </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 pb-5 space-y-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-0.5">Content</label>
-                    <Textarea 
-                      value={store.postConfig.text}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        return store.updatePostConfig({ text: e.target.value });
-                      }}
-                      className="bg-secondary/50 border-border focus:bg-background min-h-[100px]" 
-                      placeholder="Write your post caption..."
-                    />
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                     <div className="space-y-1.5">
-                        <div className="flex items-center gap-1">
-                          <Heart className="w-3 h-3 text-muted-foreground" />
-                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Likes</label>
-                        </div>
-                        <Input 
-                          value={store.postConfig.likes}
-                          onChange={(e) => store.updatePostConfig({ likes: e.target.value })}
-                          className="h-9 text-xs bg-secondary/50"
-                        />
-                     </div>
-                     <div className="space-y-1.5">
-                        <div className="flex items-center gap-1">
-                          <MessageCircle className="w-3 h-3 text-muted-foreground" />
-                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comm</label>
-                        </div>
-                        <Input 
-                          value={store.postConfig.comments}
-                          onChange={(e) => store.updatePostConfig({ comments: e.target.value })}
-                          className="h-9 text-xs bg-secondary/50"
-                        />
-                     </div>
-                     <div className="space-y-1.5">
-                        <div className="flex items-center gap-1">
-                          <Repeat2 className="w-3 h-3 text-muted-foreground" />
-                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Share</label>
-                        </div>
-                        <Input 
-                          value={store.postConfig.shares}
-                          onChange={(e) => store.updatePostConfig({ shares: e.target.value })}
-                          className="h-9 text-xs bg-secondary/50"
-                        />
-                     </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-0.5">Image URL</label>
-                    <Input 
-                      value={store.postConfig.image || ''}
-                      onChange={(e) => store.updatePostConfig({ image: e.target.value })}
-                      className="h-9 text-xs bg-secondary/50"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            )}
-
-            {/* PEOPLE / AUTHOR SECTION */}
-            <AccordionItem value="people" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-purple/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <Users className="w-5 h-5 text-section-purple" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">{store.mockupType === 'post' ? 'Author' : 'People'}</span>
-                    <span className="text-xs font-medium text-muted-foreground">{store.mockupType === 'post' ? 'Edit author info' : 'Edit profiles'}</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-5">
-                <motion.div
+            <TabsContent value="content" className="space-y-6 mt-0">
+               <div className="space-y-4">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   {store.mockupType === 'post' ? 'Author' : 'People'}
+                 </h3>
+                 <motion.div
                   variants={sectionVariants}
                   initial="hidden"
                   animate="visible"
@@ -613,25 +440,75 @@ export const Sidebar = () => {
                     </div>
                   </div>
                 </motion.div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* MESSAGES SECTION */}
-            {store.mockupType === 'chat' && (
-            <AccordionItem value="messages" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-green/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <MessageSquare className="w-5 h-5 text-section-green" strokeWidth={2} />
+               </div>
+               
+               {store.mockupType === 'post' ? (
+                 <div className="space-y-4 pt-4 border-t border-border">
+                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                     Post Content
+                   </h3>
+                   <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-0.5">Content</label>
+                    <Textarea 
+                      value={store.postConfig.text}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                        return store.updatePostConfig({ text: e.target.value });
+                      }}
+                      className="bg-secondary/50 border-border focus:bg-background min-h-[100px]" 
+                      placeholder="Write your post caption..."
+                    />
                   </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Messages</span>
-                    <span className="text-xs font-medium text-muted-foreground">{store.messages.length} message{store.messages.length !== 1 ? 's' : ''}</span>
+                  <div className="grid grid-cols-3 gap-2">
+                     <div className="space-y-1.5">
+                        <div className="flex items-center gap-1">
+                          <Heart className="w-3 h-3 text-muted-foreground" />
+                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Likes</label>
+                        </div>
+                        <Input 
+                          value={store.postConfig.likes}
+                          onChange={(e) => store.updatePostConfig({ likes: e.target.value })}
+                          className="h-9 text-xs bg-secondary/50"
+                        />
+                     </div>
+                     <div className="space-y-1.5">
+                        <div className="flex items-center gap-1">
+                          <MessageCircle className="w-3 h-3 text-muted-foreground" />
+                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comm</label>
+                        </div>
+                        <Input 
+                          value={store.postConfig.comments}
+                          onChange={(e) => store.updatePostConfig({ comments: e.target.value })}
+                          className="h-9 text-xs bg-secondary/50"
+                        />
+                     </div>
+                     <div className="space-y-1.5">
+                        <div className="flex items-center gap-1">
+                          <Repeat2 className="w-3 h-3 text-muted-foreground" />
+                          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Share</label>
+                        </div>
+                        <Input 
+                          value={store.postConfig.shares}
+                          onChange={(e) => store.updatePostConfig({ shares: e.target.value })}
+                          className="h-9 text-xs bg-secondary/50"
+                        />
+                     </div>
                   </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4 space-y-4">
-                <motion.div
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-0.5">Image URL</label>
+                    <Input 
+                      value={store.postConfig.image || ''}
+                      onChange={(e) => store.updatePostConfig({ image: e.target.value })}
+                      className="h-9 text-xs bg-secondary/50"
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                 </div>
+               ) : (
+                 <div className="space-y-4 pt-4 border-t border-border">
+                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                     Messages
+                   </h3>
+                   <motion.div
                   variants={sectionVariants}
                   initial="hidden"
                   animate="visible"
@@ -694,117 +571,99 @@ export const Sidebar = () => {
                   </AnimatePresence>
                   <div ref={messagesEndRef} />
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-            )}
+                 </div>
+               )}
+            </TabsContent>
 
-            {/* SAVED MOCKUPS SECTION */}
-            <AccordionItem value="saved" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <Bookmark className="w-5 h-5 text-amber-500" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Saved Mockups</span>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {store.savedMockups.length === 0
-                        ? 'Save & restore your work'
-                        : `${store.savedMockups.length} saved`}
-                    </span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div
-                  variants={sectionVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  <SavedMockupsPanel />
-                </motion.div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* TEMPLATES SECTION */}
-            {store.mockupType === 'chat' && (
-            <AccordionItem value="templates" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-green/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <LayoutTemplate className="w-5 h-5 text-section-green" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Templates</span>
-                    <span className="text-xs font-medium text-muted-foreground">One-click preset conversations</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div
+            <TabsContent value="design" className="space-y-6 mt-0">
+               <div className="space-y-4">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   Platform
+                 </h3>
+                 <motion.div 
                   variants={sectionVariants}
                   initial="hidden"
                   animate="visible"
                   className="grid grid-cols-2 gap-2.5"
                 >
-                  {CHAT_TEMPLATES.map((template, index) => (
-                    <motion.button
-                      key={template.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.04 }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => {
-                        store.setPlatform(template.platform);
-                        store.updateContact(template.contact);
-                        store.setMessages(
-                          template.messages.map((m) => ({ ...m, id: crypto.randomUUID() }))
-                        );
-                        showToast(`"${template.title}" template loaded!`, 'success');
-                      }}
-                      className="relative flex flex-col items-start gap-2 p-3.5 rounded-xl border border-border bg-card hover:border-primary/30 hover:bg-secondary/50 transition-all text-left group overflow-hidden"
-                    >
-                      {/* Colour accent strip */}
-                      <div className={`absolute top-0 left-0 right-0 h-0.5 ${template.color.replace('/10', '')} opacity-60 group-hover:opacity-100 transition-opacity`} />
-
-                      {/* Emoji badge */}
-                      <div className={`w-9 h-9 rounded-xl ${template.color} flex items-center justify-center text-xl shrink-0`}>
-                        {template.emoji}
-                      </div>
-
-                      {/* Text */}
-                      <div className="w-full">
-                        <p className="text-[12px] font-bold text-foreground leading-tight">{template.title}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{template.description}</p>
-                      </div>
-
-                      {/* Platform chip */}
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60 border border-border/50 px-1.5 py-0.5 rounded-full">
-                        {template.platform}
-                      </span>
-                    </motion.button>
-                  ))}
+                  {validPlatforms.map((p, index) => {
+                    const isSelected = store.platform === p.id;
+                    return (
+                      <motion.button
+                        key={p.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                        whileHover={!p.locked ? { scale: 1.02 } : {}}
+                        whileTap={!p.locked ? { scale: 0.98 } : {}}
+                        onClick={() => !p.locked && store.setPlatform(p.id)}
+                        className={cn(
+                          "relative px-3.5 py-3 rounded-xl flex items-center gap-3 transition-all border group text-left",
+                          isSelected
+                            ? 'bg-foreground border-foreground text-background shadow-medium'
+                            : 'bg-card border-border hover:border-primary/30 hover:bg-secondary/50',
+                          p.locked && "opacity-50 cursor-not-allowed hover:border-border hover:bg-card"
+                        )}
+                      >
+                        <span className={cn(
+                          "flex items-center justify-center transition-all duration-200", 
+                          !p.locked && !isSelected && p.color,
+                          isSelected && "text-background",
+                          p.locked && "grayscale"
+                        )}>
+                          {p.icon}
+                        </span>
+                        <div className="flex flex-col min-w-0">
+                          <span className={cn(
+                            "text-sm font-semibold leading-tight truncate",
+                            isSelected ? "text-background" : "text-foreground"
+                          )}>
+                            {p.name}
+                          </span>
+                          {p.locked && (
+                            <span className="text-[10px] font-medium text-muted-foreground">Pro only</span>
+                          )}
+                        </div>
+                        
+                        {p.locked && (
+                          <Lock className="w-3 h-3 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
+                        )}
+                        {isSelected && !p.locked && (
+                          <CheckCircle2 className="w-4 h-4 text-background absolute right-3 top-1/2 -translate-y-1/2" strokeWidth={2.5} />
+                        )}
+                      </motion.button>
+                    );
+                  })}
                 </motion.div>
-              </AccordionContent>
-            </AccordionItem>
-            )}
+               </div>
 
-            {/* APPEARANCE SECTION */}
-            <AccordionItem value="appearance" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-section-orange/10 flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <Palette className="w-5 h-5 text-section-orange" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">Appearance</span>
-                    <span className="text-xs font-medium text-muted-foreground">Theme & style</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div
+               <div className="space-y-4 pt-4 border-t border-border">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   Message Type
+                 </h3>
+                 <motion.div
+                  variants={sectionVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <button className="w-full bg-secondary/50 border border-border px-4 py-3.5 rounded-xl text-sm font-semibold text-foreground flex justify-between items-center cursor-pointer hover:border-primary/30 hover:bg-secondary transition-all group">
+                    <span className="flex items-center gap-3">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-section-green opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-section-green"></span>
+                      </span>
+                      Direct Message
+                    </span>
+                    <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+                  </button>
+                </motion.div>
+               </div>
+
+               <div className="space-y-4 pt-4 border-t border-border">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   Appearance
+                 </h3>
+                 <motion.div
                   variants={sectionVariants}
                   initial="hidden"
                   animate="visible"
@@ -1013,24 +872,81 @@ export const Sidebar = () => {
                        </div>
                    </div>
                  </motion.div>
-               </AccordionContent>
-             </AccordionItem>
+               </div>
+            </TabsContent>
 
-            {/* ABOUT SECTION */}
-            <AccordionItem value="about" className="border border-border rounded-2xl overflow-hidden bg-card shadow-card">
-              <AccordionTrigger className="hover:no-underline py-4 px-4 group">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center transition-all duration-200 group-hover:scale-105">
-                    <Info className="w-5 h-5 text-muted-foreground" strokeWidth={2} />
-                  </div>
-                  <div className="flex flex-col items-start gap-0.5 text-left">
-                    <span className="text-sm font-bold text-foreground leading-none">About</span>
-                    <span className="text-xs font-medium text-muted-foreground">Info & credits</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-4 pb-4">
-                <motion.div
+            <TabsContent value="saved" className="space-y-6 mt-0">
+               {store.mockupType === 'chat' && (
+                 <div className="space-y-4">
+                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                     Templates
+                   </h3>
+                   <motion.div
+                  variants={sectionVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-2 gap-2.5"
+                >
+                  {CHAT_TEMPLATES.map((template, index) => (
+                    <motion.button
+                      key={template.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.04 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        store.setPlatform(template.platform);
+                        store.updateContact(template.contact);
+                        store.setMessages(
+                          template.messages.map((m) => ({ ...m, id: crypto.randomUUID() }))
+                        );
+                        showToast(`"${template.title}" template loaded!`, 'success');
+                      }}
+                      className="relative flex flex-col items-start gap-2 p-3.5 rounded-xl border border-border bg-card hover:border-primary/30 hover:bg-secondary/50 transition-all text-left group overflow-hidden"
+                    >
+                      {/* Colour accent strip */}
+                      <div className={`absolute top-0 left-0 right-0 h-0.5 ${template.color.replace('/10', '')} opacity-60 group-hover:opacity-100 transition-opacity`} />
+
+                      {/* Emoji badge */}
+                      <div className={`w-9 h-9 rounded-xl ${template.color} flex items-center justify-center text-xl shrink-0`}>
+                        {template.emoji}
+                      </div>
+
+                      {/* Text */}
+                      <div className="w-full">
+                        <p className="text-[12px] font-bold text-foreground leading-tight">{template.title}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{template.description}</p>
+                      </div>
+
+                      {/* Platform chip */}
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60 border border-border/50 px-1.5 py-0.5 rounded-full">
+                        {template.platform}
+                      </span>
+                    </motion.button>
+                  ))}
+                </motion.div>
+                 </div>
+               )}
+
+               <div className="space-y-4 pt-4 border-t border-border">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   Saved Mockups
+                 </h3>
+                 <motion.div
+                  variants={sectionVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  <SavedMockupsPanel />
+                </motion.div>
+               </div>
+
+               <div className="space-y-4 pt-4 border-t border-border">
+                 <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                   About
+                 </h3>
+                 <motion.div
                   variants={sectionVariants}
                   initial="hidden"
                   animate="visible"
@@ -1041,9 +957,10 @@ export const Sidebar = () => {
                     Built with React, Tailwind, Framer Motion, and ❤️
                   </p>
                 </motion.div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+               </div>
+            </TabsContent>
+          </Tabs>
+
         </div>
       </div>
       
