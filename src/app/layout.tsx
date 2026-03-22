@@ -7,6 +7,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 import { UrlHydrator } from "@/components/shared/url-hydrator";
 import { ToastProvider } from "@/components/shared/toast";
 import { Suspense } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const font = Inter({ 
   subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
                 <UrlHydrator />
               </Suspense>
               {children}
+              <SpeedInsights />
               <div className="fixed top-4 right-4 z-[100]">
                 <ThemeToggle />
               </div>
