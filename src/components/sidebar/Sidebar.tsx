@@ -303,7 +303,7 @@ export const Sidebar = () => {
       </motion.div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto overscroll-contain">
+      <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
         <div className="p-4 lg:p-5 pb-24 space-y-2">
           
           
@@ -969,7 +969,7 @@ export const Sidebar = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="p-5 border-t border-border bg-card/50 backdrop-blur-sm"
+        className="p-5 border-t border-border bg-card/50 backdrop-blur-sm shrink-0"
       >
         <div className="flex justify-center items-center gap-4 text-xs font-semibold text-muted-foreground">
           <a href="#" className="hover:text-foreground transition-colors">Terms</a>

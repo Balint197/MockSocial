@@ -227,7 +227,7 @@ export const ChatCanvas = () => {
         }
     };
     return (
-        <div ref={wrapperRef} className="flex items-center justify-center py-6 pb-28 lg:py-8 lg:pb-32 lg:p-8 min-h-0 lg:min-h-screen relative w-full overflow-x-hidden">
+        <div ref={wrapperRef} className="flex items-center justify-center py-6 pb-28 lg:py-8 lg:pb-32 lg:p-8 min-h-0 lg:min-h-full relative w-full overflow-x-hidden">
             <div
                 id="chat-canvas"
                 className="relative group transition-all duration-500 ease-in-out origin-center z-10"
