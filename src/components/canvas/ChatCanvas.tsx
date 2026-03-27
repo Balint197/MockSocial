@@ -232,7 +232,7 @@ export const ChatCanvas = () => {
                 id="chat-canvas"
                 className="relative group transition-all duration-500 ease-in-out origin-center z-10"
                 suppressHydrationWarning
-                style={dynamicScale !== null ? { transform: `scale(${dynamicScale})`, transformOrigin: 'top center' } : { transformOrigin: 'top center' }}
+                style={dynamicScale !== null ? { transform: `scale(${dynamicScale})`, transformOrigin: 'center center' } : { transformOrigin: 'center center' }}
             >
                 <div className="absolute -inset-4 bg-gradient-to-tr from-primary/40 via-purple-500/40 to-secondary/40 rounded-[3.5rem] blur-2xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse pointer-events-none" />
                 {/* Phone Frame */}
