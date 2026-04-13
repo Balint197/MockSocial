@@ -853,6 +853,25 @@ export const Sidebar = () => {
                             </div>
                        </div>
 
+                       <div className="flex items-center justify-between mt-3">
+                            <label className="text-[11px] font-medium text-foreground ml-0.5">Export Quality (PNG)</label>
+                            <div className="flex gap-1 bg-secondary/50 p-0.5 rounded-full">
+                                {([1, 2, 3] as const).map(q => (
+                                    <button
+                                        key={q}
+                                        onClick={() => store.setExportQuality(q as any)}
+                                        className={`px-3 py-1 text-[10px] font-medium rounded-full transition-all ${
+                                            store.exportQuality === q 
+                                                ? "bg-primary text-primary-foreground shadow-sm" 
+                                                : "text-muted-foreground hover:text-foreground"
+                                        }`}
+                                    >
+                                        {q}x
+                                    </button>
+                                ))}
+                            </div>
+                       </div>
+
                        <div className="space-y-1.5 pt-1">
                           <label className="text-[11px] font-medium text-foreground ml-0.5">Wallpaper</label>
                           <div className="relative group">

@@ -11,6 +11,7 @@ export type Sender = 'me' | 'them';
 export type MessageStatus = 'sent' | 'delivered' | 'read';
 export type MockupType = 'chat' | 'post';
 export type PhoneStyle = 'default' | 'mini' | 'pro';
+export type ExportQuality = 1 | 2 | 3;
 
 export interface PostConfig {
   text: string;
@@ -47,6 +48,8 @@ export interface Contact {
 
 // Combine all slice interfaces
 export type ChatState = AppSlice & ChatSlice & PostSlice & SavedMockupsSlice & {
+  exportQuality: ExportQuality;
+  setExportQuality: (quality: ExportQuality) => void;
   generateRandomContent: () => void;
   resetState: () => void;
   importState: (state: Partial<ChatState>) => void;
@@ -61,6 +64,8 @@ export const useChatStore = create<ChatState>()(
         ...createChatSlice(...a),
         ...createPostSlice(...a),
         ...createSavedMockupsSlice(...a),
+        exportQuality: 2,
+        setExportQuality: (quality: ExportQuality) => set({ exportQuality: quality }),
         importState: (newState) => {
           set((state) => ({ ...state, ...newState }));
         },
@@ -124,6 +129,7 @@ export const useChatStore = create<ChatState>()(
         isDarkMode: state.isDarkMode,
         showWatermark: state.showWatermark,
         phoneStyle: state.phoneStyle,
+        exportQuality: state.exportQuality,
         savedMockups: state.savedMockups,
       }),
     }

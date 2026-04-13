@@ -22,15 +22,14 @@ const LinkedInPostSkin = dynamic(() => import("../skins/LinkedInPostSkin").then(
 const ThreadsPostSkin = dynamic(() => import("../skins/ThreadsPostSkin").then(mod => mod.ThreadsPostSkin));
 import { StatusBar } from "./StatusBar";
 import { Download, Video, SlidersHorizontal } from "lucide-react";
-import { toPng } from "html-to-image";
-import { generateGifFromElements } from "@/lib/export-utils";
+// Export libraries are dynamically imported to improve initial load time.
 import { WatermarkOverlay } from "./watermark-overlay";
 import { KeyboardOverlay } from "./KeyboardOverlay";
 import { useToast } from "@/components/shared/toast";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 export const ChatCanvas = () => {
-    const { platform, isDarkMode, mockupType, wallpaper, showKeyboard, phoneStyle, setMobileSheetOpen } = useChatStore();
+    const { platform, isDarkMode, mockupType, wallpaper, showKeyboard, phoneStyle, setMobileSheetOpen, exportQuality } = useChatStore();
 
     // Dynamic scale: fit mockup to available width on any screen size.
     // Initialized to null so the server render uses no inline style (avoids hydration mismatch).
@@ -151,8 +150,9 @@ export const ChatCanvas = () => {
         }
 
         try {
+            const { toPng } = await import("html-to-image");
             const dataUrl = await toPng(node, {
-                pixelRatio: 2,
+                pixelRatio: exportQuality ?? 2,
                 cacheBust: true,
             });
             const link = document.createElement("a");
@@ -210,6 +210,8 @@ export const ChatCanvas = () => {
             const width = parseInt(dims.match(/w-\[(\d+)px\]/)?.[1] || "340");
             const height = parseInt(dims.match(/h-\[(\d+)px\]/)?.[1] || "700");
             
+            const { generateGifFromElements } = await import("@/lib/export-utils");
+            const { generateGifFromElements } = await import("@/lib/export-utils");
             const blob = await generateGifFromElements(frames, width, height);
             
             const dataUrl = URL.createObjectURL(blob);
