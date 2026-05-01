@@ -43,6 +43,7 @@
     "@types/node": "^25.0.6",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
+    "babel-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
     "@vitejs/plugin-react": "^5.1.4",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
