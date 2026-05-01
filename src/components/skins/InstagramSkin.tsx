@@ -4,7 +4,10 @@ import React, { useRef } from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Phone, Video, Camera, Mic, Image as ImageIcon, Heart, Smile, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import EmojiPicker, { Theme } from "emoji-picker-react";
+import dynamic from "next/dynamic";
+import { Theme } from "emoji-picker-react";
+
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 export const InstagramSkin = () => {
     const { contact, messages, isDarkMode, wallpaper, statusBar, addMessage, deleteMessage, updateMessage } = useChatStore();
