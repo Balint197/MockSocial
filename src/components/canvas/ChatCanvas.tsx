@@ -1,6 +1,12 @@
 "use client";
 
 import React from "react";
+import { StatusBar } from "./StatusBar";
+import { Download, Video, SlidersHorizontal } from "lucide-react";
+import { WatermarkOverlay } from "./watermark-overlay";
+import { KeyboardOverlay } from "./KeyboardOverlay";
+import { useToast } from "@/components/shared/toast";
+import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import dynamic from "next/dynamic";
 import { useChatStore } from "@/store/useChatStore";
 
@@ -20,13 +26,13 @@ const InstagramPostSkin = dynamic(() => import("../skins/InstagramPostSkin").the
 const XPostSkin = dynamic(() => import("../skins/XPostSkin").then(mod => mod.XPostSkin));
 const LinkedInPostSkin = dynamic(() => import("../skins/LinkedInPostSkin").then(mod => mod.LinkedInPostSkin));
 const ThreadsPostSkin = dynamic(() => import("../skins/ThreadsPostSkin").then(mod => mod.ThreadsPostSkin));
-import { StatusBar } from "./StatusBar";
-import { Download, Video, SlidersHorizontal } from "lucide-react";
+
+
 // Export libraries are dynamically imported to improve initial load time.
-import { WatermarkOverlay } from "./watermark-overlay";
-import { KeyboardOverlay } from "./KeyboardOverlay";
-import { useToast } from "@/components/shared/toast";
-import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
+
+
+
+
 
 export const ChatCanvas = () => {
     const { platform, isDarkMode, mockupType, wallpaper, showKeyboard, phoneStyle, setMobileSheetOpen, exportQuality } = useChatStore();

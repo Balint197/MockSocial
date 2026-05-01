@@ -10,7 +10,7 @@ import { Theme } from "emoji-picker-react";
 const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 export const InstagramSkin = () => {
-    const { contact, messages, isDarkMode, wallpaper, statusBar, addMessage, deleteMessage, updateMessage } = useChatStore();
+    const { contact, messages, isDarkMode, wallpaper, addMessage, deleteMessage } = useChatStore();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [inputValue, setInputValue] = React.useState("");
     const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);

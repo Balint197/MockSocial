@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBar } from "@/components/shared/StatusBar";
 
 export const WhatsAppSkin = () => {
-  const { contact, messages, isDarkMode, wallpaper, statusBar } = useChatStore();
+  const { contact, messages, isDarkMode, wallpaper } = useChatStore();
 
   return (
     <div className={`flex flex-col h-full relative overflow-hidden font-sans ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-[#0b141a] text-[#e9edef]' : 'bg-[#EFE7DD] text-[#111b21]')}`}>

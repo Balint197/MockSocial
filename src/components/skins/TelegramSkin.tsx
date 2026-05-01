@@ -6,7 +6,7 @@ import { ArrowLeft, MoreVertical, Paperclip, Smile, Mic, Send } from "lucide-rea
 import { StatusBar } from "@/components/shared/StatusBar";
 
 export const TelegramSkin = () => {
-    const { contact, messages, isDarkMode, wallpaper, statusBar } = useChatStore();
+    const { contact, messages, isDarkMode, wallpaper } = useChatStore();
 
     return (
         <div className={`flex flex-col h-full relative font-sans ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#708499]')}`}>
