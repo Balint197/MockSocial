@@ -217,7 +217,6 @@ export const ChatCanvas = () => {
             const height = parseInt(dims.match(/h-\[(\d+)px\]/)?.[1] || "700");
             
             const { generateGifFromElements } = await import("@/lib/export-utils");
-            const { generateGifFromElements } = await import("@/lib/export-utils");
             const blob = await generateGifFromElements(frames, width, height);
             
             const dataUrl = URL.createObjectURL(blob);
@@ -317,4 +316,3 @@ export const ChatCanvas = () => {
         </div>
     );
 };
-
