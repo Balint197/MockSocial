@@ -41,7 +41,7 @@ MockSocial is a web application that generates high-fidelity social media chat m
 
 | Technology | Purpose | Version |
 |------------|---------|---------|
-| **Next.js 15** | Framework & routing | ^16.1.1 |
+| **Next.js 16** | Framework & routing | ^16.1.1 |
 | **React 19** | UI library | ^19.2.3 |
 | **TypeScript** | Type safety | ^5.9.3 |
 | **Tailwind CSS v4** | Styling | ^4.1.18 |
@@ -49,11 +49,15 @@ MockSocial is a web application that generates high-fidelity social media chat m
 | **Framer Motion** | Animations | ^12.26.1 |
 | **LZ-String** | URL compression | ^1.5.0 |
 | **html-to-image** | Screenshot export | ^1.11.13 |
-| **modern-gif** | Animated GIF export | ^latest |
-| **@dnd-kit** | Drag-and-drop | ^10.0.0 |
+| **modern-gif** | Animated GIF export | ^2.0.4 |
+| **@dnd-kit** | Drag-and-drop | ^6.3.1 / ^10.0.0 |
 | **lucide-react** | Icons | ^0.562.0 |
 | **@faker-js/faker** | Random data | ^10.2.0 |
-| **@google/generative-ai** | AI conversation generation | latest |
+| **@google/generative-ai** | AI conversation generation | ^0.24.1 |
+| **emoji-picker-react** | Emoji input (lazy-loaded) | ^4.17.3 |
+| **@vercel/analytics** | Page-view analytics | ^2.0.1 |
+| **@vercel/speed-insights** | Web vitals monitoring | ^2.0.0 |
+| **Vitest** | Unit testing | ^4.0.18 |
 
 ---
 
@@ -164,6 +168,7 @@ useChatStore (Combined Store)
     ├── createChatSlice         → Chat-specific data
     ├── createPostSlice         → Post-specific data
     ├── createSavedMockupsSlice → Named mockup snapshots (save/load/delete)
+    ├── exportQuality           → Top-level PNG pixel-ratio (1 | 2 | 3)
     └── Middleware              → Persistence + Actions
 ```
 
@@ -237,7 +242,7 @@ interface SavedMockup {
   postConfig: PostConfig;
   isDarkMode: boolean;
   wallpaper: string | null;
-  phoneStyle: PhoneStyle;
+  phoneStyle: PhoneStyle; // 'default' | 'mini' | 'pro'
 }
 
 interface SavedMockupsSlice {
@@ -265,6 +270,9 @@ export const useChatStore = create<ChatState>()(
         ...createAppSlice(...a),
         ...createChatSlice(...a),
         ...createPostSlice(...a),
+        ...createSavedMockupsSlice(...a),
+        exportQuality: 2,
+        setExportQuality: (quality) => set({ exportQuality: quality }),
         generateRandomContent: () => { /* ... */ },
         resetState: () => { /* ... */ },
         importState: (state: Partial<ChatState>) => { /* ... */ },
@@ -274,6 +282,7 @@ export const useChatStore = create<ChatState>()(
       name: 'chat-mockup-storage',
       version: 2, // Bumped when savedMockups was added
       migrate: (persistedState, version) => {
+        if (version === 0) persistedState.phoneStyle = 'default';
         if (version < 2) persistedState.savedMockups = [];
         return persistedState;
       },
@@ -287,7 +296,9 @@ export const useChatStore = create<ChatState>()(
         postConfig: state.postConfig,
         isDarkMode: state.isDarkMode,
         showWatermark: state.showWatermark,
-        savedMockups: state.savedMockups, // ← persisted history
+        phoneStyle: state.phoneStyle,
+        exportQuality: state.exportQuality, // ← user's preferred pixel ratio
+        savedMockups: state.savedMockups,   // ← persisted history
       }),
     }
   )
@@ -481,6 +492,57 @@ generateRandomContent: () => {
   }
 }
 ```
+
+---
+
+## Export Quality System
+
+The export pipeline supports three configurable pixel-ratio levels controlled by the `exportQuality` store field.
+
+```typescript
+export type ExportQuality = 1 | 2 | 3;
+```
+
+| Setting | Pixel Ratio | Use Case |
+|---------|------------|----------|
+| `1` | 1× native | Small, fast previews |
+| `2` | 2× (default) | Balanced sharpness for most use cases |
+| `3` | 3× | Maximum resolution for print / high-DPI screens |
+
+The user selects quality via a UI control in the Sidebar; the value is persisted to `localStorage` alongside all other state.
+
+---
+
+## Chat Templates
+
+Handcrafted starter conversations (`src/lib/templates.ts`) let users jump directly into a polished mockup without having to type any messages manually.
+
+```typescript
+export interface ChatTemplate {
+  id: string;
+  title: string;        // e.g. "Couple Fight"
+  description: string;  // e.g. "The silent treatment escalates fast"
+  emoji: string;
+  color: string;        // Tailwind class for card accent
+  textColor: string;
+  platform: Platform;   // Pre-selects the matching skin
+  contact: Partial<Contact>;
+  messages: Omit<Message, 'id'>[];
+}
+```
+
+**Available templates:**
+
+| Template | Platform | Description |
+|----------|----------|-------------|
+| Couple Fight 💔 | iMessage | The silent treatment escalates fast |
+| Bestie Recap 🤣 | WhatsApp | Catching up over absolutely nothing |
+| Work Standup 💼 | Slack | Corporate chaos in DMs |
+| Making Plans 🗓️ | Telegram | Nobody can commit to anything |
+| Late Night 🌙 | Instagram | The 2am totally-friends conversation |
+| Post-Party Debrief 🎉 | WhatsApp | The morning after recap |
+
+Selecting a template calls `importState()` to hydrate the store with the template's `contact` and `messages`, then switches to the correct `platform`.
 
 ---
 
@@ -681,7 +743,8 @@ mock-social/
 │   │   ├── utils.ts                  # General utilities (cn function)
 │   │   ├── url-state.ts              # URL encoding/decoding
 │   │   ├── autofill-utils.ts         # Random content generation
-│   │   └── export-utils.ts           # GIF construction and native pipelines
+│   │   ├── export-utils.ts           # GIF construction and native pipelines
+│   │   └── templates.ts              # Pre-built chat template scenarios
 │   │
 │   ├── auth.ts                       # NextAuth configuration
 │   └── middleware.ts                 # Next.js middleware
@@ -716,10 +779,15 @@ The `SavedMockupsSlice` implements the Memento behavioural pattern: `saveMockup`
 
 ## Performance Considerations
 
-1. **Lazy Loading**: Skins are dynamically imported in ChatCanvas
-2. **Persistence**: State persisted to localStorage to preserve work between sessions
-3. **Memoization**: Components use React hooks for efficient re-renders
-4. **Image Compression**: URL sharing warns if data exceeds ~4000 chars
+1. **Lazy Loading**: Heavy components are dynamically imported to keep the initial bundle lean:
+   - All platform skins loaded via `dynamic()` in `ChatCanvas.tsx`
+   - `emoji-picker-react` lazy-loaded on first emoji-button click
+   - `generateGifFromElements` imported dynamically only when GIF export is triggered
+2. **`optimizePackageImports`**: `next.config.ts` enables Next.js compiler-level tree-shaking for `lucide-react` and `framer-motion`, reducing chunk sizes significantly.
+3. **Persistence**: State persisted to `localStorage` to preserve work between sessions.
+4. **Memoization**: Components use React hooks for efficient re-renders.
+5. **Image Compression**: URL sharing warns if data exceeds ~4000 chars.
+6. **Vercel Analytics & Speed Insights**: Real-user performance monitoring integrated via `@vercel/analytics` and `@vercel/speed-insights`.
 
 ---
 

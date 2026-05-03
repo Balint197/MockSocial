@@ -34,14 +34,18 @@ Thank you for your interest in contributing to MockSocial! We want to make it as
 
 ## Project Structure
 
-MockSocial uses **Next.js 15 (App Router)** and **Zustand** for state management.
+MockSocial uses **Next.js 16 (App Router)** and **Zustand** for state management.
 
 - `src/app`: Page routes.
 - `src/components/canvas`: The main phone preview area (`ChatCanvas.tsx` renders the phone frame and dynamically scales it via `ResizeObserver`).
 - `src/components/skins`: Where all the platform-specific UIs live (e.g., `WhatsAppSkin.tsx`).
 - `src/components/sidebar`: The configuration panel. On mobile (`< lg`) the Sidebar renders as a **Framer Motion bottom sheet** triggered by `isMobileSheetOpen` in the store.
 - `src/store`: Global state management.
-- `src/lib`: core utilities including `url-state.ts` (sharing engine) and `autofill-utils.ts` (random data generator).
+- `src/lib`: Core utilities:
+  - `url-state.ts` — URL sharing engine
+  - `autofill-utils.ts` — random data generator
+  - `export-utils.ts` — GIF frame capture + encode pipeline
+  - `templates.ts` — 6 pre-built chat template scenarios
 - `src/app/api/generate-chat`: AI conversation generator API route (Google Gemini).
 - `src/components/shared/ai-chat-dialog.tsx`: AI conversation generator modal UI.
 
@@ -145,8 +149,21 @@ Before opening a PR, open Chrome DevTools → Toggle device toolbar (Ctrl+Shift+
 
 1.  **Fork the repo** and create your branch from `main`.
 2.  **Lint your code**: Run `npm run lint` before committing to ensure everything looks good.
-3.  **Test your changes**: verify that the new skin renders correctly in the browser and that switching between skins works smoothly.
-4.  **Screenshots**: If you are adding a visual feature or skin, please include screenshots or a video in your PR description.
+3.  **Run tests**: Run `npm test` (Vitest) before committing. Tests live alongside source files and use `@testing-library/react`.
+4.  **Test your changes**: verify that the new skin renders correctly in the browser and that switching between skins works smoothly.
+5.  **Screenshots**: If you are adding a visual feature or skin, please include screenshots or a video in your PR description.
+
+## Export Quality
+
+MockSocial supports configurable PNG export quality (`1×`, `2×`, `3×` pixel-ratio). The setting is exposed via the `exportQuality` field in the Zustand store (`ExportQuality = 1 | 2 | 3`) and persisted to `localStorage`. The default is `2×`.
+
+If you are extending the export pipeline, pass `exportQuality` as the `pixelRatio` option to `html-to-image`.
+
+## Chat Templates
+
+Pre-built starter conversations live in `src/lib/templates.ts` as a `CHAT_TEMPLATES` array. Each template defines a `platform`, `contact`, and `messages` array.
+
+To add a new template, simply append a new `ChatTemplate` object to `CHAT_TEMPLATES`. The Sidebar will automatically pick it up.
 
 ## Asking for Help
 

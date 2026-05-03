@@ -36,8 +36,10 @@ MockSocial offers a premium, pixel-perfect environment for designing realistic s
     *   **Custom Wallpapers**: Upload any image to set as your chat background for a personalized touch.
     *   **Keyboard Overlay**: Toggle a realistic iOS keyboard to simulate active typing scenarios.
 *   **Production-Ready Export**: 
-    *   **High-Res PNGs**: One-click generation of high-resolution (2x) PNGs of the entire phone frame.
+    *   **High-Res PNGs**: One-click generation of high-resolution PNGs of the entire phone frame.
+    *   **Export Quality Control**: Choose between 1×, 2×, or 3× pixel-ratio for PNG downloads — balancing file size and quality.
     *   **Animated GIFs**: Create fluid scrolling `.gif` sequences natively in the browser to deliver video-like proof-of-work arrays.
+*   **Chat Templates 📋**: Jump-start your mockup with 6 handcrafted, ready-to-use conversation templates ("Couple Fight", "Bestie Recap", "Work Standup", and more).
 
 ### Mobile Experience
 *   **Fully Responsive**: Works seamlessly on any device — phone, tablet, or desktop.
@@ -49,18 +51,20 @@ MockSocial offers a premium, pixel-perfect environment for designing realistic s
 
 ## Tech Stack
 
-![Next.js](https://img.shields.io/badge/Next.js_15-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=white)
 ![Google Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=google-gemini&logoColor=white)
 
-*   **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+*   **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 *   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 *   **Animation**: [Framer Motion](https://www.framer.com/motion/)
 *   **State Management**: [Zustand](https://github.com/pmndrs/zustand)
 *   **Icons**: [Lucide React](https://lucide.dev/)
 *   **AI**: [Google Generative AI SDK](https://ai.google.dev/) (Gemini 2.0 Flash)
+*   **Analytics**: [Vercel Analytics](https://vercel.com/analytics) + [Speed Insights](https://vercel.com/docs/speed-insights)
+*   **Testing**: [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)
 
 ---
 
@@ -168,6 +172,7 @@ We use **Zustand** with a sliced architecture for global state management.
 *   **Chat Slice**: Manages `messages`, `contact` info, and conversation history.
 *   **Post Slice**: Manages configuration for post mockups (`likes`, `comments`, `shares`).
 *   **Saved Mockups Slice**: Manages a named list of full mockup snapshots (`savedMockups`), persisted to `localStorage`. Exposes `saveMockup`, `loadMockup`, and `deleteMockup` actions.
+*   **Export Quality**: A top-level `exportQuality` field (`1 | 2 | 3`) controls the PNG pixel-ratio; defaults to `2`. Persisted to `localStorage`.
 
 To use the store in a component:
 ```typescript
