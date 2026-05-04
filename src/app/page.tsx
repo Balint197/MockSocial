@@ -4,7 +4,7 @@ import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen lg:h-screen lg:overflow-hidden relative bg-background text-foreground overflow-x-hidden">
+    <main className="flex min-h-screen lg:h-[100dvh] lg:overflow-hidden relative bg-background text-foreground overflow-x-hidden">
       {/* Dynamic Animated Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px] animate-[float_8s_infinite]" />
