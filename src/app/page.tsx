@@ -4,7 +4,7 @@ import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen lg:h-[100dvh] lg:overflow-hidden relative bg-background text-foreground overflow-x-hidden">
+    <main className="flex min-h-screen lg:h-[100dvh] lg:min-h-0 lg:overflow-hidden relative bg-background text-foreground overflow-x-hidden">
       {/* Dynamic Animated Background */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px] animate-[float_8s_infinite]" />
@@ -15,9 +15,9 @@ export default function Home() {
 
       {/* On lg+: row layout (sidebar left, canvas right).
           On mobile: column — canvas first, sidebar becomes a floating bottom sheet. */}
-      <div className="flex flex-col lg:flex-row w-full h-full relative z-10">
+      <div className="flex flex-col lg:flex-row w-full h-full lg:min-h-0 relative z-10">
         <Sidebar />
-        <div className="flex-1 flex items-center justify-center p-4 lg:p-8 overflow-y-auto overflow-x-hidden min-h-[100svh] lg:min-h-0 lg:h-full">
+        <div className="flex-1 flex items-center justify-center p-4 lg:p-8 overflow-y-auto lg:overflow-hidden overflow-x-hidden min-h-[100svh] lg:min-h-0 lg:h-full">
           <ErrorBoundary>
             <ChatCanvas />
           </ErrorBoundary>
