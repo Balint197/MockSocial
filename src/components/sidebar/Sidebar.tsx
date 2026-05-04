@@ -179,7 +179,7 @@ export const Sidebar = () => {
 
       {/* ── Sidebar: static panel on desktop, bottom-sheet on mobile ── */}
       <motion.div
-        className="w-full lg:w-[440px] lg:max-w-[440px] lg:h-[100dvh] bg-background/95 lg:bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans lg:border-r border-border lg:relative lg:z-50 shrink-0
+        className="w-full lg:w-[440px] lg:max-w-[440px] lg:h-[100dvh] lg:min-h-0 bg-background/95 lg:bg-background/80 backdrop-blur-xl flex flex-col overflow-hidden font-sans lg:border-r border-border lg:relative lg:z-50 shrink-0
           fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl shadow-2xl
           lg:static lg:rounded-none lg:shadow-none"
         initial={false}
@@ -443,7 +443,7 @@ export const Sidebar = () => {
                </div>
                
                {store.mockupType === 'post' ? (
-                 <div className="space-y-4 pt-4 border-t border-border">
+                 <div className="space-y-4 pt-4 border-t border-border min-h-0">
                    <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
                      Post Content
                    </h3>
@@ -532,7 +532,7 @@ export const Sidebar = () => {
                   </div>
                 </motion.div>
 
-                  <div className="space-y-2.5 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="space-y-2.5 max-h-[min(400px,calc(100dvh-360px))] min-h-0 overflow-y-auto overscroll-contain pr-2 custom-scrollbar">
                   <AnimatePresence mode="popLayout">
                     {store.messages.length === 0 ? (
                       <motion.div
