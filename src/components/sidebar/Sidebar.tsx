@@ -67,20 +67,20 @@ interface PlatformItem {
 }
 
 const platforms: PlatformItem[] = [
-  { id: 'whatsapp', name: 'WhatsApp', icon: <Icons.WhatsApp className="w-5 h-5 fill-current" />, color: 'text-green-600', bgColor: 'bg-green-50', locked: false, types: ['chat'] },
-  { id: 'messenger', name: 'Messenger', icon: <Icons.Messenger className="w-5 h-5 fill-current" />, color: 'text-blue-500', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
-  { id: 'telegram', name: 'Telegram', icon: <Icons.Telegram className="w-5 h-5 fill-current" />, color: 'text-sky-500', bgColor: 'bg-sky-50', locked: false, types: ['chat'] },
-  { id: 'discord', name: 'Discord', icon: <Icons.Discord className="w-5 h-5 fill-current" />, color: 'text-indigo-600', bgColor: 'bg-indigo-50', locked: false, types: ['chat'] },
-  { id: 'imessage', name: 'iMessage', icon: <Icons.Apple className="w-5 h-5 fill-current" />, color: 'text-slate-800', bgColor: 'bg-slate-100', locked: false, types: ['chat'] },
-  { id: 'instagram', name: 'Instagram', icon: <Icons.Instagram className="w-5 h-5" />, color: 'text-pink-600', bgColor: 'bg-pink-50', locked: false, types: ['chat', 'post'] },
-  { id: 'slack', name: 'Slack', icon: <Icons.Slack className="w-5 h-5 fill-current" />, color: 'text-purple-700', bgColor: 'bg-purple-50', locked: false, types: ['chat'] },
-  { id: 'teams', name: 'Teams', icon: <Users className="w-5 h-5" />, color: 'text-blue-700', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
-  { id: 'signal', name: 'Signal', icon: <Icons.Signal className="w-5 h-5 fill-current" />, color: 'text-blue-600', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
-  { id: 'x', name: 'X / Twitter', icon: <Icons.Twitter className="w-5 h-5 fill-current" />, color: 'text-slate-900', bgColor: 'bg-slate-100', locked: false, types: ['chat', 'post'] },
-  { id: 'snapchat', name: 'Snapchat', icon: <MessageSquare className="w-5 h-5" />, color: 'text-yellow-500', bgColor: 'bg-yellow-50', locked: false, types: ['chat'] },
-  { id: 'tiktok', name: 'TikTok', icon: <Smartphone className="w-5 h-5" />, color: 'text-slate-900', bgColor: 'bg-slate-100', locked: false, types: ['chat'] }, // TikTok post? Maybe later
-  { id: 'linkedin', name: 'LinkedIn', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-700', bgColor: 'bg-blue-50', locked: false, types: ['post'] },
-  { id: 'threads', name: 'Threads', icon: <AtSign className="w-5 h-5" />, color: 'text-slate-900', bgColor: 'bg-slate-100', locked: false, types: ['post'] },
+  { id: 'whatsapp', name: 'WhatsApp', icon: <Icons.WhatsApp className="w-5 h-5 fill-current" />, color: 'text-green-600 dark:text-green-400', bgColor: 'bg-green-50', locked: false, types: ['chat'] },
+  { id: 'messenger', name: 'Messenger', icon: <Icons.Messenger className="w-5 h-5 fill-current" />, color: 'text-blue-500 dark:text-blue-400', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
+  { id: 'telegram', name: 'Telegram', icon: <Icons.Telegram className="w-5 h-5 fill-current" />, color: 'text-sky-500 dark:text-sky-400', bgColor: 'bg-sky-50', locked: false, types: ['chat'] },
+  { id: 'discord', name: 'Discord', icon: <Icons.Discord className="w-5 h-5 fill-current" />, color: 'text-indigo-600 dark:text-indigo-400', bgColor: 'bg-indigo-50', locked: false, types: ['chat'] },
+  { id: 'imessage', name: 'iMessage', icon: <Icons.Apple className="w-5 h-5 fill-current" />, color: 'text-slate-800 dark:text-slate-200', bgColor: 'bg-slate-100', locked: false, types: ['chat'] },
+  { id: 'instagram', name: 'Instagram', icon: <Icons.Instagram className="w-5 h-5" />, color: 'text-pink-600 dark:text-pink-400', bgColor: 'bg-pink-50', locked: false, types: ['chat', 'post'] },
+  { id: 'slack', name: 'Slack', icon: <Icons.Slack className="w-5 h-5 fill-current" />, color: 'text-purple-700 dark:text-purple-400', bgColor: 'bg-purple-50', locked: false, types: ['chat'] },
+  { id: 'teams', name: 'Teams', icon: <Users className="w-5 h-5" />, color: 'text-blue-700 dark:text-blue-400', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
+  { id: 'signal', name: 'Signal', icon: <Icons.Signal className="w-5 h-5 fill-current" />, color: 'text-blue-600 dark:text-blue-400', bgColor: 'bg-blue-50', locked: false, types: ['chat'] },
+  { id: 'x', name: 'X / Twitter', icon: <Icons.Twitter className="w-5 h-5 fill-current" />, color: 'text-slate-900 dark:text-slate-200', bgColor: 'bg-slate-100', locked: false, types: ['chat', 'post'] },
+  { id: 'snapchat', name: 'Snapchat', icon: <MessageSquare className="w-5 h-5" />, color: 'text-yellow-500 dark:text-yellow-400', bgColor: 'bg-yellow-50', locked: false, types: ['chat'] },
+  { id: 'tiktok', name: 'TikTok', icon: <Smartphone className="w-5 h-5" />, color: 'text-slate-900 dark:text-slate-200', bgColor: 'bg-slate-100', locked: false, types: ['chat'] }, // TikTok post? Maybe later
+  { id: 'linkedin', name: 'LinkedIn', icon: <Linkedin className="w-5 h-5" />, color: 'text-blue-700 dark:text-blue-400', bgColor: 'bg-blue-50', locked: false, types: ['post'] },
+  { id: 'threads', name: 'Threads', icon: <AtSign className="w-5 h-5" />, color: 'text-slate-900 dark:text-slate-200', bgColor: 'bg-slate-100', locked: false, types: ['post'] },
 ];
 
 export const Sidebar = () => {
