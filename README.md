@@ -68,6 +68,30 @@ MockSocial offers a premium, pixel-perfect environment for designing realistic s
 
 ---
 
+## High-Level Architecture
+
+```mermaid
+graph TD
+    %% Application Layer
+    Sidebar["Sidebar\n(User Controls)\n- Platform Select\n- Message Editor\n- Contact Config\n- Appearance"]
+    Zustand["Zustand Store\n\nApp Slice:\n- platform\n- theme\n- mockup\n\nChat Slice:\n- messages\n- contact\n- postConfig"]
+
+    Sidebar --> Zustand
+
+    %% ChatCanvas
+    subgraph ChatCanvas["ChatCanvas"]
+        subgraph PhoneFrame["Phone Frame Container"]
+            StatusBar["Status Bar"]
+            subgraph SkinRenderer["Dynamic Skin Renderer"]
+                Skin["SignalSkin / WhatsAppSkin / ...\n(Platform-specific UI components)"]
+            end
+        end
+    end
+
+    Sidebar --> ChatCanvas
+    Zustand --> ChatCanvas
+```
+
 ## Project Structure
 
 The project is organized to effectively process, render, and manage state for multiple social media skins.
