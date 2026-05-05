@@ -10,7 +10,9 @@ import { Theme } from "emoji-picker-react";
 const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
 export const InstagramSkin = () => {
-    const { contact, messages, isDarkMode, wallpaper, addMessage, deleteMessage } = useChatStore();
+    const { contact, messages, isDarkMode, wallpaper, addMessage, deleteMessage, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+    const meBubbleColor = useCustomColors ? storeMeColor : null;
+    const themBubbleColor = useCustomColors ? storeThemColor : null;
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [inputValue, setInputValue] = React.useState("");
     const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
@@ -146,11 +148,12 @@ export const InstagramSkin = () => {
                                      max-w-[70%] text-[15px] leading-snug overflow-hidden
                                      ${msg.image ? 'p-0 bg-transparent' : 'px-4 py-3'}
                                      ${!msg.image && (isMe 
-                                         ? "bg-[#3797f0] text-white"
-                                         : (isDarkMode ? "bg-[#262626] text-white" : "bg-[#efefef] text-black"))
+                                         ? "text-white"
+                                         : (isDarkMode ? "text-white" : "text-black"))
                                      }
                                  `}
                                  style={{
+                                     backgroundColor: msg.image ? 'transparent' : (isMe ? (meBubbleColor || '#3797f0') : (themBubbleColor || (isDarkMode ? '#262626' : '#efefef'))),
                                      borderRadius: '22px',
                                      borderBottomRightRadius: isMe && isLast ? '4px' : '22px',
                                      borderBottomLeftRadius: !isMe && isLast ? '4px' : '22px',

@@ -1,5 +1,6 @@
 import { StateCreator } from 'zustand';
-import { Platform, MockupType, StatusBarConfig } from '../useChatStore';
+import { Platform, MockupType, StatusBarConfig, ChatState } from '../useChatStore';
+import { getPlatformColors } from '@/lib/platform-colors';
 
 export interface AppSlice {
   mockupType: MockupType;
@@ -23,7 +24,7 @@ export interface AppSlice {
   setMobileSheetOpen: (open: boolean) => void;
 }
 
-export const createAppSlice: StateCreator<AppSlice> = (set) => ({
+export const createAppSlice: StateCreator<ChatState, [], [], AppSlice> = (set, get) => ({
   mockupType: 'chat',
   platform: 'signal',
   statusBar: {
@@ -41,10 +42,30 @@ export const createAppSlice: StateCreator<AppSlice> = (set) => ({
   isMobileSheetOpen: false,
 
   setMockupType: (type) => set({ mockupType: type }),
-  setPlatform: (platform) => set({ platform }),
+  setPlatform: (platform) => {
+    set({ platform });
+    
+    // Update bubble colors according to new platform if custom colors are enabled
+    const state = get();
+    if (state.useCustomColors) {
+      const colors = getPlatformColors(platform, state.isDarkMode);
+      state.setMeBubbleColor(colors.me);
+      state.setThemBubbleColor(colors.them);
+    }
+  },
   updateStatusBar: (updates) =>
     set((state) => ({ statusBar: { ...state.statusBar, ...updates } })),
-  toggleDarkMode: (isDark) => set({ isDarkMode: isDark }),
+  toggleDarkMode: (isDark) => {
+    set({ isDarkMode: isDark });
+    
+    // Update colors if dark mode changes
+    const state = get();
+    if (state.useCustomColors) {
+      const colors = getPlatformColors(state.platform, isDark);
+      state.setMeBubbleColor(colors.me);
+      state.setThemBubbleColor(colors.them);
+    }
+  },
   toggleWatermark: (show) => set({ showWatermark: show }),
   setWallpaper: (url) => set({ wallpaper: url }),
   toggleKeyboard: (show) => set({ showKeyboard: show }),

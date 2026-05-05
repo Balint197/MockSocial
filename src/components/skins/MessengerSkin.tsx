@@ -5,7 +5,9 @@ import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Phone, Video, Info, Image as ImageIcon, Mic, ThumbsUp, PlusCircle, Smile } from "lucide-react";
 
 export const MessengerSkin = () => {
-    const { contact, messages, isDarkMode, wallpaper } = useChatStore();
+    const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+    const meBubbleColor = useCustomColors ? storeMeColor : null;
+    const themBubbleColor = useCustomColors ? storeThemColor : null;
 
     return (
         <div className={`flex flex-col h-full font-sans ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-black' : 'bg-white')} ${isDarkMode ? 'text-white' : 'text-black'}`}>
@@ -70,11 +72,14 @@ export const MessengerSkin = () => {
                                 className={`
                                     px-4 py-2.5 max-w-[70%] text-[15px] leading-snug
                                     ${isMe 
-                                        ? "bg-[#0084ff] text-white" 
-                                        : (isDarkMode ? "bg-[#303030] text-white" : "bg-[#f0f0f0] text-black")
+                                        ? "text-white" 
+                                        : (isDarkMode ? "text-white" : "text-black")
                                     }
                                 `}
                                 style={{
+                                    backgroundColor: isMe 
+                                        ? (meBubbleColor || '#0084ff') 
+                                        : (themBubbleColor || (isDarkMode ? '#303030' : '#f0f0f0')),
                                     borderRadius: '18px',
                                     borderTopRightRadius: isMe && !isFirstInGroup ? '4px' : '18px',
                                     borderBottomRightRadius: isMe && !isLastInGroup ? '4px' : '18px',

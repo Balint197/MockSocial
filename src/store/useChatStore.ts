@@ -30,6 +30,7 @@ export interface Message {
   status: MessageStatus;
   replyToId?: string;
   reactions?: { emoji: string; count: number }[];
+  bubbleColor?: string;
 }
 
 export interface StatusBarConfig {
@@ -131,6 +132,9 @@ export const useChatStore = create<ChatState>()(
         phoneStyle: state.phoneStyle,
         exportQuality: state.exportQuality,
         savedMockups: state.savedMockups,
+        useCustomColors: state.useCustomColors,
+        meBubbleColor: state.meBubbleColor,
+        themBubbleColor: state.themBubbleColor,
       }),
     }
   )

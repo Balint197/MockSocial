@@ -19,7 +19,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBar } from "@/components/shared/StatusBar";
 
 export const WhatsAppSkin = () => {
-  const { contact, messages, isDarkMode, wallpaper } = useChatStore();
+  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const meBubbleColor = useCustomColors ? storeMeColor : null;
+  const themBubbleColor = useCustomColors ? storeThemColor : null;
 
   return (
     <div className={`flex flex-col h-full relative overflow-hidden font-sans ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-[#0b141a] text-[#e9edef]' : 'bg-[#EFE7DD] text-[#111b21]')}`}>
@@ -89,14 +91,19 @@ export const WhatsAppSkin = () => {
                 className={`
                   relative max-w-[75%] px-3 py-1.5 rounded-lg text-[14.2px] leading-[19px] shadow-[0_1px_0.5px_rgba(11,20,26,0.13)]
                   ${isMe 
-                    ? (isDarkMode ? "bg-[#005c4b] text-[#e9edef]" : "bg-[#d9fdd3] text-[#111b21]") + " rounded-tr-none" 
-                    : (isDarkMode ? "bg-[#202c33] text-[#e9edef]" : "bg-white text-[#111b21]") + " rounded-tl-none"}
+                    ? (isDarkMode ? "text-[#e9edef]" : "text-[#111b21]") + " rounded-tr-none" 
+                    : (isDarkMode ? "text-[#e9edef]" : "text-[#111b21]") + " rounded-tl-none"}
                 `}
+                style={{
+                  backgroundColor: isMe 
+                    ? (meBubbleColor || (isDarkMode ? '#005c4b' : '#d9fdd3'))
+                    : (themBubbleColor || (isDarkMode ? '#202c33' : '#ffffff'))
+                }}
               >
                 {/* Tail SVG */}
                 {isLastInGroup && !quotedMessage && (
                   <span className={`absolute top-0 ${isMe ? "-right-2" : "-left-2"} w-2 h-3 overflow-hidden`}>
-                    <svg viewBox="0 0 8 13" width="8" height="13" className={`w-full h-full fill-current ${isMe ? (isDarkMode ? 'text-[#005c4b]' : 'text-[#d9fdd3]') : (isDarkMode ? 'text-[#202c33]' : 'text-white')}`}>
+                    <svg viewBox="0 0 8 13" width="8" height="13" className={`w-full h-full fill-current`} style={{ color: isMe ? (meBubbleColor || (isDarkMode ? '#005c4b' : '#d9fdd3')) : (themBubbleColor || (isDarkMode ? '#202c33' : '#ffffff')) }}>
                        <path d={isMe ? "M5.188 1H0v11.193l6.467-8.625C7.526 2.156 6.958 1 5.188 1z" : "M-2.188 1H3v11.193l-6.467-8.625C-4.526 2.156 -3.958 1 -2.188 1z"} transform={!isMe ? "scale(-1, 1) translate(-8, 0)" : ""} />
                     </svg>
                   </span>
