@@ -1,4 +1,4 @@
-import { Platform } from "../useChatStore";
+import { Platform } from "../store/useChatStore";
 
 export const getPlatformColors = (platform: Platform, isDarkMode: boolean = false) => {
   switch (platform) {
