@@ -4,6 +4,9 @@ import { Contact, Message, Sender } from '../useChatStore';
 export interface ChatSlice {
     contact: Contact;
     messages: Message[];
+    useCustomColors: boolean;
+    meBubbleColor: string | null;
+    themBubbleColor: string | null;
 
     updateContact: (contact: Partial<Contact>) => void;
     addMessage: (message: Omit<Message, 'id'>) => void;
@@ -11,6 +14,9 @@ export interface ChatSlice {
     updateMessage: (id: string, updates: Partial<Message>) => void;
     deleteMessage: (id: string) => void;
     reorderMessages: (fromIndex: number, toIndex: number) => void;
+    setUseCustomColors: (use: boolean) => void;
+    setMeBubbleColor: (color: string | null) => void;
+    setThemBubbleColor: (color: string | null) => void;
 }
 
 export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
@@ -19,6 +25,9 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
         status: 'Online',
         avatar: null,
     },
+    useCustomColors: false,
+    meBubbleColor: null,
+    themBubbleColor: null,
     messages: [
         {
             id: '1',
@@ -70,4 +79,7 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
             newMessages.splice(toIndex, 0, movedMessage);
             return { messages: newMessages };
         }),
+    setUseCustomColors: (use) => set({ useCustomColors: use }),
+    setMeBubbleColor: (color) => set({ meBubbleColor: color }),
+    setThemBubbleColor: (color) => set({ themBubbleColor: color }),
 });

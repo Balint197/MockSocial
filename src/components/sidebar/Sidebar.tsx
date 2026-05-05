@@ -659,6 +659,88 @@ export const Sidebar = () => {
                 </motion.div>
                </div>
 
+               {store.mockupType === 'chat' && 
+                !['discord', 'slack', 'threads'].includes(store.platform) && (
+                 <div className="space-y-4 pt-4 border-t border-border">
+                   <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
+                     Chat Bubble Colors
+                   </h3>
+                   <motion.div
+                    variants={sectionVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-3"
+                  >
+                     <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-medium text-foreground ml-0.5">Enable Custom Colors</label>
+                        <Button 
+                            size="sm"
+                            variant={store.useCustomColors ? "default" : "outline"}
+                            onClick={() => {
+                              const newUseCustomColors = !store.useCustomColors;
+                              store.setUseCustomColors(newUseCustomColors);
+                              
+                              if (newUseCustomColors && !store.meBubbleColor && !store.themBubbleColor) {
+                                // Apply platform colors initially when enabling
+                                const { getPlatformColors } = require('@/lib/platform-colors');
+                                const colors = getPlatformColors(store.platform, store.isDarkMode);
+                                store.setMeBubbleColor(colors.me);
+                                store.setThemBubbleColor(colors.them);
+                              }
+                            }}
+                            className={`h-7 w-12 rounded-full transition-all ${store.useCustomColors ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary'}`}
+                        >
+                            {store.useCustomColors ? "On" : "Off"}
+                        </Button>
+                     </div>
+                     
+                     {store.useCustomColors && (
+                       <>
+                         <div className="flex items-center justify-between pt-2">
+                              <label className="text-[11px] font-medium text-foreground ml-0.5">Our Bubble</label>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  type="color"
+                                  value={store.meBubbleColor ?? "#0A84FF"}
+                                  onChange={(e) => store.setMeBubbleColor(e.target.value)}
+                                  className="w-8 h-8 p-0 border-0 rounded overflow-hidden cursor-pointer"
+                                />
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  className="h-8 px-2 text-xs"
+                                  onClick={() => store.setMeBubbleColor(null)}
+                                >
+                                  Reset
+                                </Button>
+                              </div>
+                         </div>
+                         
+                         <div className="flex items-center justify-between">
+                              <label className="text-[11px] font-medium text-foreground ml-0.5">Other Bubble</label>
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  type="color"
+                                  value={store.themBubbleColor ?? "#E5E5E8"}
+                                  onChange={(e) => store.setThemBubbleColor(e.target.value)}
+                                  className="w-8 h-8 p-0 border-0 rounded overflow-hidden cursor-pointer"
+                                />
+                                <Button 
+                                  size="sm" 
+                                  variant="ghost" 
+                                  className="h-8 px-2 text-xs"
+                                  onClick={() => store.setThemBubbleColor(null)}
+                                >
+                                  Reset
+                                </Button>
+                              </div>
+                         </div>
+                       </>
+                     )}
+                   </motion.div>
+                 </div>
+               )}
+
                <div className="space-y-4 pt-4 border-t border-border">
                  <h3 className="text-sm font-bold text-foreground flex items-center gap-2 pl-1">
                    Appearance
@@ -798,12 +880,9 @@ export const Sidebar = () => {
                               <Button 
                                   size="sm"
                                   disabled={syncTheme}
-                                  variant={store.isDarkMode ? "default" : "outline"}
-                                  onClick={() => {
-                                    store.toggleDarkMode(!store.isDarkMode);
-                                    showToast(store.isDarkMode ? "Switched to light mode" : "Switched to dark mode", "info");
-                                  }}
-                                  className={`h-7 w-12 rounded-full transition-all ${store.isDarkMode ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary'}`}
+                                  variant={store.isDarkMode && !syncTheme ? "default" : "outline"}
+                                  onClick={() => store.toggleDarkMode(!store.isDarkMode)}
+                                  className={`h-7 w-12 rounded-full transition-all ${store.isDarkMode && !syncTheme ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary'} ${syncTheme ? 'opacity-50 cursor-not-allowed' : ''}`}
                               >
                                   {store.isDarkMode ? "On" : "Off"}
                               </Button>

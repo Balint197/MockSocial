@@ -5,7 +5,9 @@ import { useChatStore } from "@/store/useChatStore";
 import { ChevronLeft, Info, Video, Phone, ArrowUp, Camera, Plus, Mic, AppWindow } from "lucide-react";
 
 export const IMessageSkin = () => {
-  const { contact, messages, isDarkMode } = useChatStore();
+  const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const meBubbleColor = useCustomColors ? storeMeColor : null;
+  const themBubbleColor = useCustomColors ? storeThemColor : null;
 
   return (
     <div className={`flex flex-col h-full relative font-sans ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
@@ -71,10 +73,11 @@ export const IMessageSkin = () => {
                
                <div className={`max-w-[70%] relative px-4 py-2 text-[17px] leading-[22px] tracking-tight ${
                    isMe 
-                    ? (isDarkMode ? "bg-[#0A84FF] text-white" : "bg-[#007AFF] text-white") 
-                    : (isDarkMode ? "bg-[#26262a] text-white" : "bg-[#E9E9EB] text-black")
+                    ? (isDarkMode ? (meBubbleColor ? "text-white" : "bg-[#0A84FF] text-white") : (meBubbleColor ? "text-white" : "bg-[#007AFF] text-white")) 
+                    : (isDarkMode ? (themBubbleColor ? "text-white" : "bg-[#26262a] text-white") : (themBubbleColor ? "text-black" : "bg-[#E9E9EB] text-black"))
                }`}
                style={{
+                   backgroundColor: isMe ? (meBubbleColor || undefined) : (themBubbleColor || undefined),
                    borderRadius: '20px',
                    borderBottomRightRadius: isMe && showTail ? '4px' : '20px',
                    borderBottomLeftRadius: !isMe && showTail ? '4px' : '20px',
@@ -84,12 +87,12 @@ export const IMessageSkin = () => {
                    
                    {/* Tail Logic (CSS shapes or absolute) */}
                    {showTail && isMe && (
-                       <svg className={`absolute -bottom-[0px] -right-[6px] w-4 h-4 fill-current transform scale-x-[-1] ${isDarkMode ? "text-[#0A84FF]" : "text-[#007AFF]"}`} viewBox="0 0 20 20">
+                       <svg className={`absolute -bottom-[0px] -right-[6px] w-4 h-4 transform scale-x-[-1] ${!meBubbleColor ? (isDarkMode ? "text-[#0A84FF] fill-current" : "text-[#007AFF] fill-current") : ""}`} style={{ fill: meBubbleColor || 'currentColor' }} viewBox="0 0 20 20">
                            <path d="M20,20 C20,8.954305 11.045695,0 0,0 C0,0 3.394154,6.790938 7.3235339,12.723805 C9.8631105,16.558296 14.869038,19.261908 20,20 Z" />
                        </svg>
                    )}
                    {showTail && !isMe && (
-                       <svg className={`absolute -bottom-[0px] -left-[6px] w-4 h-4 fill-current ${isDarkMode ? "text-[#26262a]" : "text-[#E9E9EB]"}`} viewBox="0 0 20 20">
+                       <svg className={`absolute -bottom-[0px] -left-[6px] w-4 h-4 ${!themBubbleColor ? (isDarkMode ? "text-[#26262a] fill-current" : "text-[#E9E9EB] fill-current") : ""}`} style={{ fill: themBubbleColor || 'currentColor' }} viewBox="0 0 20 20">
                           <path d="M20,20 C20,8.954305 11.045695,0 0,0 C0,0 3.394154,6.790938 7.3235339,12.723805 C9.8631105,16.558296 14.869038,19.261908 20,20 Z" transform="scale(-1, 1) translate(-20, 0)" />
                        </svg>
                    )}

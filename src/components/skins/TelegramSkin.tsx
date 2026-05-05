@@ -6,7 +6,9 @@ import { ArrowLeft, MoreVertical, Paperclip, Smile, Mic, Send } from "lucide-rea
 import { StatusBar } from "@/components/shared/StatusBar";
 
 export const TelegramSkin = () => {
-    const { contact, messages, isDarkMode, wallpaper } = useChatStore();
+    const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+    const meBubbleColor = useCustomColors ? storeMeColor : null;
+    const themBubbleColor = useCustomColors ? storeThemColor : null;
 
     return (
         <div className={`flex flex-col h-full relative font-sans ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-[#0f0f0f]' : 'bg-[#708499]')}`}>
@@ -53,11 +55,14 @@ export const TelegramSkin = () => {
                                 className={`
                                     relative px-3 py-1.5 min-w-[80px] max-w-[75%] rounded-lg shadow-sm text-[15px] leading-snug
                                     ${isMe 
-                                        ? (isDarkMode ? "bg-[#2b5278] text-white" : "bg-[#eeffde] text-black") 
-                                        : (isDarkMode ? "bg-[#182533] text-white" : "bg-white text-black")
+                                        ? (isDarkMode ? "text-white" : "text-black") 
+                                        : (isDarkMode ? "text-white" : "text-black")
                                     }
                                 `}
                                 style={{
+                                    backgroundColor: isMe 
+                                        ? (meBubbleColor || (isDarkMode ? '#2b5278' : '#eeffde'))
+                                        : (themBubbleColor || (isDarkMode ? '#182533' : '#ffffff')),
                                     borderRadius: '12px',
                                     borderBottomRightRadius: isMe ? '4px' : '12px',
                                     borderBottomLeftRadius: !isMe ? '4px' : '12px'
@@ -78,12 +83,12 @@ export const TelegramSkin = () => {
 
                                  {/* Tail SVG */}
                                  {isMe && (
-                                     <svg className={`absolute -bottom-[0px] -right-[7px] w-3 h-3 fill-current ${isDarkMode ? "text-[#2b5278]" : "text-[#eeffde]"}`} viewBox="0 0 10 10">
+                                     <svg className={`absolute -bottom-[0px] -right-[7px] w-3 h-3 fill-current`} style={{ color: (meBubbleColor || (isDarkMode ? '#2b5278' : '#eeffde')) }} viewBox="0 0 10 10">
                                          <path d="M0,0 L0,10 L10,10 C5,10 2,8 0,0 Z" />
                                      </svg>
                                  )}
                                  {!isMe && (
-                                      <svg className={`absolute -bottom-[0px] -left-[7px] w-3 h-3 fill-current transform scale-x-[-1] ${isDarkMode ? "text-[#182533]" : "text-white"}`} viewBox="0 0 10 10">
+                                      <svg className={`absolute -bottom-[0px] -left-[7px] w-3 h-3 fill-current transform scale-x-[-1]`} style={{ color: (themBubbleColor || (isDarkMode ? '#182533' : '#ffffff')) }} viewBox="0 0 10 10">
                                           <path d="M0,0 L0,10 L10,10 C5,10 2,8 0,0 Z" />
                                       </svg>
                                  )}

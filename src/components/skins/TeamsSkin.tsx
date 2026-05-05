@@ -5,7 +5,9 @@ import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Video, Phone, MoreHorizontal, Image as ImageIcon, Smile, Type, Send, Paperclip } from "lucide-react";
 
 export const TeamsSkin = () => {
-    const { contact, messages, isDarkMode } = useChatStore();
+    const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+    const meBubbleColor = useCustomColors ? storeMeColor : null;
+    const themBubbleColor = useCustomColors ? storeThemColor : null;
 
     return (
         <div className={`flex flex-col h-full font-sans ${isDarkMode ? 'bg-[#1f1f1f] text-white' : 'bg-[#f5f5f5] text-black'}`}>
@@ -55,10 +57,13 @@ export const TeamsSkin = () => {
                                     className={`
                                         px-3 py-2 text-[14px] leading-relaxed shadow-sm
                                         ${isMe 
-                                            ? "bg-[#e8ebfa] text-[#242424] border border-[#d1dbe0]" 
-                                            : (isDarkMode ? "bg-[#292929] text-white border-[#3d3d3d]" : "bg-white text-[#242424] border-[#e1e1e1]")}
+                                            ? "text-[#242424] border border-[#d1dbe0]" 
+                                            : (isDarkMode ? "text-white border-[#3d3d3d]" : "text-[#242424] border-[#e1e1e1]")}
                                     `}
                                     style={{
+                                        backgroundColor: isMe 
+                                            ? (meBubbleColor || "#e8ebfa") 
+                                            : (themBubbleColor || (isDarkMode ? "#292929" : "#ffffff")),
                                         borderRadius: '4px',
                                         // Teams bubbles are slightly rectangular with small radius
                                     }}

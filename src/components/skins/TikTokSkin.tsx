@@ -5,7 +5,9 @@ import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, MoreHorizontal, Flag, Share2, Heart, Smile } from "lucide-react";
 
 export const TikTokSkin = () => {
-    const { contact, messages, isDarkMode } = useChatStore();
+    const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+    const meBubbleColor = useCustomColors ? storeMeColor : null;
+    const themBubbleColor = useCustomColors ? storeThemColor : null;
 
     return (
         <div className={`flex flex-col h-full font-sans ${isDarkMode ? 'bg-[#121212] text-white' : 'bg-white text-black'}`}>
@@ -71,15 +73,18 @@ export const TikTokSkin = () => {
                              )}
                              {!isMe && isGrouped && <div className="w-10 mr-0" />}
 
-                             <div
+                                <div
                                 className={`
                                     px-4 py-2.5 max-w-[75%] text-[15px] leading-snug
                                     ${isMe 
-                                        ? "bg-[#fe2c55] text-white" 
-                                        : (isDarkMode ? "bg-[#333333] text-white" : "bg-[#e2e2e2] text-black")
+                                        ? "text-white" 
+                                        : (isDarkMode ? "text-white" : "text-black")
                                     }
                                 `}
                                 style={{
+                                    backgroundColor: isMe 
+                                        ? (meBubbleColor || "#fe2c55") 
+                                        : (themBubbleColor || (isDarkMode ? "#333333" : "#e2e2e2")),
                                     borderRadius: '16px',
                                     borderBottomRightRadius: isMe ? '4px' : '16px',
                                     borderBottomLeftRadius: !isMe ? '4px' : '16px',

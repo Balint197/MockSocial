@@ -8,7 +8,9 @@ import { ArrowLeft, Video, Phone, MoreVertical, Plus, Camera, Mic, Sticker } fro
 // Signal Gray: #f6f6f6
 
 export const SignalSkin = () => {
-  const { contact, messages, isDarkMode, wallpaper } = useChatStore();
+  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const meBubbleColor = useCustomColors ? storeMeColor : null;
+  const themBubbleColor = useCustomColors ? storeThemColor : null;
 
   return (
     <div className={`flex flex-col h-full ${wallpaper ? 'bg-transparent' : (isDarkMode ? 'bg-[#1b1b1b] text-white' : 'bg-white text-gray-900')}`}>
@@ -58,9 +60,14 @@ export const SignalSkin = () => {
             <div
               className={`px-4 py-2 rounded-2xl text-[16px] leading-[22px] relative ${
                 msg.sender === "me"
-                  ? "bg-[#2c6bed] text-white rounded-br-none"
-                  : (isDarkMode ? "bg-[#333333] text-white" : "bg-[#f6f6f6] text-black") + " rounded-bl-none"
+                  ? "text-white rounded-br-none"
+                  : (isDarkMode ? "text-white" : "text-black") + " rounded-bl-none"
               }`}
+              style={{
+                backgroundColor: msg.sender === "me"
+                  ? (meBubbleColor || '#2c6bed')
+                  : (themBubbleColor || (isDarkMode ? '#333333' : '#f6f6f6'))
+              }}
             >
               {/* Reply Block */}
               {quotedMessage && (
