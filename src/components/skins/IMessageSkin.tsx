@@ -5,7 +5,7 @@ import { useChatStore } from "@/store/useChatStore";
 import { ChevronLeft, Info, Video, Phone, ArrowUp, Camera, Plus, Mic, AppWindow } from "lucide-react";
 
 export const IMessageSkin = () => {
-  const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor, isTyping } = useChatStore();
   const meBubbleColor = useCustomColors ? storeMeColor : null;
   const themBubbleColor = useCustomColors ? storeThemColor : null;
 
@@ -112,10 +112,24 @@ export const IMessageSkin = () => {
             </div>
            );
         })}
-        {messages.length > 0 && messages[messages.length-1].sender === 'me' && (
+        {messages.length > 0 && messages[messages.length-1].sender === 'me' && !isTyping && (
              <div className="flex justify-end pr-1">
                  <span className="text-[10px] text-gray-400 font-medium">Delivered</span>
              </div>
+        )}
+
+        {isTyping && (
+            <div className="flex flex-col w-full items-start mb-1 mt-2">
+                <div className={`relative px-4 py-2.5 flex items-center justify-center gap-1 w-[60px] h-[34px] ${isDarkMode ? 'bg-[#26262a]' : 'bg-[#E9E9EB]'}`}
+                     style={{ borderRadius: '20px', borderBottomLeftRadius: '4px' }}>
+                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-500'}`} style={{ animationDelay: '0ms' }} />
+                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-500'}`} style={{ animationDelay: '150ms' }} />
+                    <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-500'}`} style={{ animationDelay: '300ms' }} />
+                    <svg className={`absolute -bottom-[0px] -left-[6px] w-4 h-4 ${isDarkMode ? "text-[#26262a] fill-current" : "text-[#E9E9EB] fill-current"}`} viewBox="0 0 20 20">
+                        <path d="M20,20 C20,8.954305 11.045695,0 0,0 C0,0 3.394154,6.790938 7.3235339,12.723805 C9.8631105,16.558296 14.869038,19.261908 20,20 Z" transform="scale(-1, 1) translate(-20, 0)" />
+                    </svg>
+                </div>
+            </div>
         )}
       </div>
 

@@ -8,7 +8,7 @@ import { ArrowLeft, Video, Phone, MoreVertical, Plus, Camera, Mic, Sticker } fro
 // Signal Gray: #f6f6f6
 
 export const SignalSkin = () => {
-  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor, isTyping } = useChatStore();
   const meBubbleColor = useCustomColors ? storeMeColor : null;
   const themBubbleColor = useCustomColors ? storeThemColor : null;
 
@@ -106,6 +106,21 @@ export const SignalSkin = () => {
             </div>
           </div>
         )})}
+
+        {isTyping && (
+          <div className="flex flex-col max-w-[75%] self-start items-start">
+            <div
+              className={`px-4 py-2.5 rounded-2xl text-[16px] leading-[22px] relative rounded-bl-none flex items-center justify-center gap-1 w-[60px] h-[36px]`}
+              style={{
+                backgroundColor: themBubbleColor || (isDarkMode ? '#333333' : '#f6f6f6')
+              }}
+            >
+              <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '0ms' }} />
+              <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '150ms' }} />
+              <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isDarkMode ? 'bg-gray-400' : 'bg-gray-400'}`} style={{ animationDelay: '300ms' }} />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer / Input */}

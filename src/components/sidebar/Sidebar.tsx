@@ -914,6 +914,18 @@ export const Sidebar = () => {
                        </div>
 
                        <div className="flex items-center justify-between">
+                            <label className="text-[11px] font-medium text-foreground ml-0.5">Typing Indicator</label>
+                            <Button 
+                                size="sm"
+                                variant={store.isTyping ? "default" : "outline"}
+                                onClick={() => store.setIsTyping(!store.isTyping)}
+                                className={`h-7 w-12 rounded-full transition-all ${store.isTyping ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary'}`}
+                            >
+                                {store.isTyping ? "On" : "Off"}
+                            </Button>
+                       </div>
+
+                       <div className="flex items-center justify-between">
                             <label className="text-[11px] font-medium text-foreground ml-0.5">Phone Style</label>
                             <div className="flex gap-1 bg-secondary/50 p-0.5 rounded-full">
                                 {(["mini", "default", "pro"] as const).map(style => (

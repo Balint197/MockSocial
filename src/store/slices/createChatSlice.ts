@@ -7,6 +7,7 @@ export interface ChatSlice {
     useCustomColors: boolean;
     meBubbleColor: string | null;
     themBubbleColor: string | null;
+    isTyping: boolean;
 
     updateContact: (contact: Partial<Contact>) => void;
     addMessage: (message: Omit<Message, 'id'>) => void;
@@ -17,6 +18,7 @@ export interface ChatSlice {
     setUseCustomColors: (use: boolean) => void;
     setMeBubbleColor: (color: string | null) => void;
     setThemBubbleColor: (color: string | null) => void;
+    setIsTyping: (isTyping: boolean) => void;
 }
 
 export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
@@ -28,6 +30,7 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
     useCustomColors: false,
     meBubbleColor: null,
     themBubbleColor: null,
+    isTyping: false,
     messages: [
         {
             id: '1',
@@ -82,4 +85,5 @@ export const createChatSlice: StateCreator<ChatSlice> = (set) => ({
     setUseCustomColors: (use) => set({ useCustomColors: use }),
     setMeBubbleColor: (color) => set({ meBubbleColor: color }),
     setThemBubbleColor: (color) => set({ themBubbleColor: color }),
+    setIsTyping: (isTyping) => set({ isTyping }),
 });

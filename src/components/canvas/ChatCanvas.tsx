@@ -138,7 +138,51 @@ export const ChatCanvas = () => {
 
     const [isGenerating, setIsGenerating] = React.useState(false);
     const [isGeneratingGif, setIsGeneratingGif] = React.useState(false);
+    const [isDragging, setIsDragging] = React.useState(false);
     const { showToast } = useToast();
+
+    const handleDragOver = React.useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer.types.includes('Files')) {
+            setIsDragging(true);
+        }
+    }, []);
+
+    const handleDragLeave = React.useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    }, []);
+
+    const handleDrop = React.useCallback((e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+        
+        const file = e.dataTransfer.files?.[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const addMessage = useChatStore.getState().addMessage;
+                const updatePostConfig = useChatStore.getState().updatePostConfig;
+                
+                if (useChatStore.getState().mockupType === 'chat') {
+                    addMessage({
+                        text: '',
+                        sender: 'me',
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        status: 'read',
+                        image: ev.target?.result as string
+                    });
+                } else {
+                    updatePostConfig({ image: ev.target?.result as string });
+                }
+                showToast("Image added successfully!", "success");
+            };
+            reader.readAsDataURL(file);
+        }
+    }, [showToast]);
 
     const downloadScreenshot = async () => {
         if (isGenerating) return;
@@ -239,6 +283,9 @@ export const ChatCanvas = () => {
                 id="chat-canvas"
                 className="relative group transition-all duration-500 ease-in-out origin-center z-10"
                 suppressHydrationWarning
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
                 style={dynamicScale !== null ? { transform: `scale(${dynamicScale})`, transformOrigin: 'center center' } : { transformOrigin: 'center center' }}
             >
                 <div className="absolute -inset-4 bg-gradient-to-tr from-primary/40 via-purple-500/40 to-secondary/40 rounded-[3.5rem] blur-2xl opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse pointer-events-none" />
@@ -265,6 +312,16 @@ export const ChatCanvas = () => {
                             </ErrorBoundary>
                             {useChatStore(s => s.showWatermark ?? true) && <WatermarkOverlay />}
                             {showKeyboard && <KeyboardOverlay />}
+                            
+                            {/* Drag and Drop Overlay */}
+                            {isDragging && (
+                                <div className="absolute inset-0 z-[100] bg-primary/20 backdrop-blur-sm flex flex-col items-center justify-center border-4 border-dashed border-primary rounded-[2.2rem] transition-all">
+                                    <div className="bg-background shadow-xl rounded-2xl p-4 flex flex-col items-center gap-2 animate-bounce">
+                                        <Download className="w-8 h-8 text-primary" strokeWidth={2.5} />
+                                        <span className="font-bold text-foreground text-sm">Drop image to add</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Home Indicator line (iOS style) */}

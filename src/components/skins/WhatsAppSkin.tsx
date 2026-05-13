@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBar } from "@/components/shared/StatusBar";
 
 export const WhatsAppSkin = () => {
-  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
+  const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor, isTyping } = useChatStore();
   const meBubbleColor = useCustomColors ? storeMeColor : null;
   const themBubbleColor = useCustomColors ? storeThemColor : null;
 
@@ -50,8 +50,8 @@ export const WhatsAppSkin = () => {
                   </Avatar>
                   <div className="flex flex-col justify-center min-w-0 overflow-hidden">
                       <span className="text-[16px] font-semibold leading-tight truncate">{contact.name}</span>
-                      <span className="text-[12px] opacity-80 leading-tight truncate font-medium">
-                          {contact.status || 'Online'}
+                      <span className={`text-[12px] leading-tight truncate font-medium ${isTyping ? (isDarkMode ? 'text-[#00a884] opacity-100' : 'text-white opacity-100 font-semibold') : 'opacity-80'}`}>
+                          {isTyping ? 'typing...' : (contact.status || 'Online')}
                       </span>
                   </div>
               </div>
