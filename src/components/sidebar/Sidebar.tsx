@@ -55,6 +55,7 @@ import { ShareDialog } from "@/components/shared/share-dialog";
 import { useToast } from "@/components/shared/toast";
 import { useTheme } from "next-themes";
 import { AIChatDialog } from "@/components/shared/ai-chat-dialog";
+import { parseConversationImport } from "@/lib/import-conversation";
 
 interface PlatformItem {
   id: Platform;
@@ -90,6 +91,7 @@ export const Sidebar = () => {
   const [showAIDialog, setShowAIDialog] = useState(false);
   const [liveTime, setLiveTime] = useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const importInputRef = React.useRef<HTMLInputElement>(null);
   const { showToast } = useToast();
   const { resolvedTheme } = useTheme();
 
@@ -151,6 +153,25 @@ export const Sidebar = () => {
       status: "read",
     });
     setNewMessageText("");
+  };
+
+  const handleImportConversation = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) return;
+
+    try {
+      const content = await file.text();
+      const result = parseConversationImport(content, file.name);
+
+      store.setMockupType("chat");
+      store.setMessages(result.messages);
+      showToast(`Imported ${result.messages.length} messages`, "success");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to import conversation.";
+      showToast(message, "error");
+    }
   };
 
   const sectionVariants = {
@@ -514,6 +535,13 @@ export const Sidebar = () => {
                   animate="visible"
                 >
                   <div className="flex gap-2">
+                    <input
+                      ref={importInputRef}
+                      type="file"
+                      accept=".txt,.json,application/json,text/plain"
+                      onChange={handleImportConversation}
+                      className="hidden"
+                    />
                     <Input
                       type="text"
                       placeholder="Type a new message..."
