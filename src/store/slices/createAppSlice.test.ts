@@ -12,7 +12,6 @@ describe('App Slice Management', () => {
         expect(state.mockupType).toBe('chat');
         expect(state.platform).toBe('signal');
         expect(state.isDarkMode).toBe(false);
-        expect(state.showWatermark).toBe(true);
         expect(state.showKeyboard).toBe(false);
         expect(state.phoneStyle).toBe('default');
     });

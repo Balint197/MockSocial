@@ -3,12 +3,12 @@
 import React from "react";
 import { StatusBar } from "./StatusBar";
 import { Download, Video, SlidersHorizontal } from "lucide-react";
-import { WatermarkOverlay } from "./watermark-overlay";
 import { KeyboardOverlay } from "./KeyboardOverlay";
 import { useToast } from "@/components/shared/toast";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import dynamic from "next/dynamic";
 import { useChatStore } from "@/store/useChatStore";
+import { dataUrlToBlob, getScrollPageOffsets, withTranslatedScrollPage } from "@/lib/export-pagination";
 
 const SignalSkin = dynamic(() => import("../skins/SignalSkin").then(mod => mod.SignalSkin));
 const IMessageSkin = dynamic(() => import("../skins/IMessageSkin").then(mod => mod.IMessageSkin));
@@ -187,12 +187,12 @@ export const ChatCanvas = () => {
     const downloadScreenshot = async () => {
         if (isGenerating) return;
         setIsGenerating(true);
-        showToast("Generating screenshot...", "info");
+        showToast("Generating screenshots...", "info");
 
         // Small delay to ensure UI updates before freezing for capture
         await new Promise(resolve => setTimeout(resolve, 100));
 
-        const node = document.getElementById("chat-canvas");
+        const node = document.querySelector('[data-export-target="screen"]') as HTMLElement | null;
         if (!node) {
             setIsGenerating(false);
             showToast("Failed to generate screenshot", "error");
@@ -201,15 +201,56 @@ export const ChatCanvas = () => {
 
         try {
             const { toPng } = await import("html-to-image");
-            const dataUrl = await toPng(node, {
+            const captureNode = async () => toPng(node, {
                 pixelRatio: exportQuality ?? 2,
                 cacheBust: true,
             });
+            const timestamp = Date.now();
+            const scrollContainer = mockupType === "chat"
+                ? node.querySelector(".overflow-y-auto") as HTMLElement | null
+                : null;
+            const offsets = scrollContainer
+                ? getScrollPageOffsets(scrollContainer.scrollHeight, scrollContainer.clientHeight)
+                : [0];
+
+            if (!scrollContainer || offsets.length === 1) {
+                const dataUrl = await captureNode();
+                const link = document.createElement("a");
+                link.download = `mockup_${mockupType}_${platform}_${timestamp}.png`;
+                link.href = dataUrl;
+                link.click();
+                showToast("Screenshot downloaded successfully!", "success");
+                return;
+            }
+
+            const { default: JSZip } = await import("jszip");
+            const zip = new JSZip();
+            const totalPages = offsets.length;
+            const pageDigits = String(totalPages).length;
+
+            for (let i = 0; i < offsets.length; i++) {
+                const dataUrl = await withTranslatedScrollPage(scrollContainer, offsets[i], async () => {
+                    await new Promise(requestAnimationFrame);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    return captureNode();
+                });
+
+                const blob = await dataUrlToBlob(dataUrl);
+                const pageNumber = String(i + 1).padStart(pageDigits, "0");
+                zip.file(
+                    `mockup_${mockupType}_${platform}_page-${pageNumber}-of-${totalPages}.png`,
+                    blob
+                );
+            }
+
+            const zipBlob = await zip.generateAsync({ type: "blob" });
+            const zipUrl = URL.createObjectURL(zipBlob);
             const link = document.createElement("a");
-            link.download = `mockup_${mockupType}_${platform}_${Date.now()}.png`;
-            link.href = dataUrl;
+            link.download = `mockup_${mockupType}_${platform}_${timestamp}.zip`;
+            link.href = zipUrl;
             link.click();
-            showToast("Screenshot downloaded successfully!", "success");
+            URL.revokeObjectURL(zipUrl);
+            showToast("Screenshots downloaded successfully!", "success");
         } catch (err) {
             console.error("Failed to generate screenshot", err);
             showToast("Failed to generate screenshot", "error");
@@ -300,32 +341,33 @@ export const ChatCanvas = () => {
 
                     {/* Inner Screen Container */}
                     <div className={`relative w-full h-full rounded-[2.5rem] overflow-hidden border-[6px] border-black ${isDarkMode ? 'bg-black' : 'bg-black'}`}>
-                        <StatusBar platform={platform} />
+                        <div data-export-target="screen" className="relative w-full h-full overflow-hidden bg-black">
+                            <StatusBar platform={platform} />
 
-                        {/* Screen Content */}
-                        <div 
-                            className="w-full h-full overflow-hidden rounded-[2.2rem] relative bg-cover bg-center bg-no-repeat"
-                            style={wallpaper ? { backgroundImage: `url(${wallpaper})` } : {}}
-                        >
-                            <ErrorBoundary>
-                                {renderSkin()}
-                            </ErrorBoundary>
-                            {useChatStore(s => s.showWatermark ?? true) && <WatermarkOverlay />}
-                            {showKeyboard && <KeyboardOverlay />}
-                            
-                            {/* Drag and Drop Overlay */}
-                            {isDragging && (
-                                <div className="absolute inset-0 z-[100] bg-primary/20 backdrop-blur-sm flex flex-col items-center justify-center border-4 border-dashed border-primary rounded-[2.2rem] transition-all">
-                                    <div className="bg-background shadow-xl rounded-2xl p-4 flex flex-col items-center gap-2 animate-bounce">
-                                        <Download className="w-8 h-8 text-primary" strokeWidth={2.5} />
-                                        <span className="font-bold text-foreground text-sm">Drop image to add</span>
+                            {/* Screen Content */}
+                            <div
+                                className="w-full h-full overflow-hidden relative bg-cover bg-center bg-no-repeat"
+                                style={wallpaper ? { backgroundImage: `url(${wallpaper})` } : {}}
+                            >
+                                <ErrorBoundary>
+                                    {renderSkin()}
+                                </ErrorBoundary>
+                                {showKeyboard && <KeyboardOverlay />}
+
+                                {/* Drag and Drop Overlay */}
+                                {isDragging && (
+                                    <div className="absolute inset-0 z-[100] bg-primary/20 backdrop-blur-sm flex flex-col items-center justify-center border-4 border-dashed border-primary transition-all">
+                                        <div className="bg-background shadow-xl rounded-2xl p-4 flex flex-col items-center gap-2 animate-bounce">
+                                            <Download className="w-8 h-8 text-primary" strokeWidth={2.5} />
+                                            <span className="font-bold text-foreground text-sm">Drop image to add</span>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
+                                )}
+                            </div>
 
-                        {/* Home Indicator line (iOS style) */}
-                        <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 w-[110px] h-1.5 rounded-full z-50 pointer-events-none ${isDarkMode ? 'bg-white/20' : 'bg-black/20'}`} />
+                            {/* Home Indicator line (iOS style) */}
+                            <div className={`absolute bottom-2 left-1/2 -translate-x-1/2 w-[110px] h-1.5 rounded-full z-50 pointer-events-none ${isDarkMode ? 'bg-white/20' : 'bg-black/20'}`} />
+                        </div>
                     </div>
                 </div>
             </div>

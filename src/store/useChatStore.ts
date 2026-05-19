@@ -128,7 +128,6 @@ export const useChatStore = create<ChatState>()(
         statusBar: state.statusBar,
         postConfig: state.postConfig,
         isDarkMode: state.isDarkMode,
-        showWatermark: state.showWatermark,
         phoneStyle: state.phoneStyle,
         exportQuality: state.exportQuality,
         savedMockups: state.savedMockups,

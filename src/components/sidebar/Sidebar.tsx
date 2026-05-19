@@ -543,6 +543,15 @@ export const Sidebar = () => {
                     >
                       <Send className="w-4 h-4" strokeWidth={2.5} />
                     </Button>
+                    <Button
+                      onClick={() => importInputRef.current?.click()}
+                      size="icon"
+                      variant="outline"
+                      title="Import conversation"
+                      className="shrink-0 w-11 h-11 rounded-xl bg-secondary/50 border-border hover:bg-secondary transition-all"
+                    >
+                      <Upload className="w-4 h-4" strokeWidth={2.5} />
+                    </Button>
                   </div>
                 </motion.div>
 
@@ -901,18 +910,6 @@ export const Sidebar = () => {
                                   {store.isDarkMode ? "On" : "Off"}
                               </Button>
                             </div>
-                       </div>
-
-                       <div className="flex items-center justify-between">
-                            <label className="text-[11px] font-medium text-foreground ml-0.5">Watermark</label>
-                            <Button 
-                                size="sm"
-                                variant={(store.showWatermark ?? true) ? "default" : "outline"}
-                                onClick={() => store.toggleWatermark(!(store.showWatermark ?? true))}
-                                className={`h-7 w-12 rounded-full transition-all ${(store.showWatermark ?? true) ? 'bg-primary text-primary-foreground' : 'bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary'}`}
-                            >
-                                {(store.showWatermark ?? true) ? "On" : "Off"}
-                            </Button>
                        </div>
 
                        <div className="flex items-center justify-between">

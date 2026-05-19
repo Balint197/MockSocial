@@ -23,6 +23,7 @@
     "emoji-picker-react": "^4.17.3",
     "framer-motion": "^12.26.1",
     "html-to-image": "^1.11.13",
+    "jszip": "^3.10.1",
     "lucide-react": "^0.562.0",
     "lz-string": "^1.5.0",
     "modern-gif": "^2.0.4",

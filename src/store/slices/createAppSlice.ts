@@ -7,14 +7,12 @@ export interface AppSlice {
   platform: Platform;
   statusBar: StatusBarConfig;
   isDarkMode: boolean;
-  showWatermark: boolean;
   isMobileSheetOpen: boolean;
 
   setMockupType: (type: MockupType) => void;
   setPlatform: (platform: Platform) => void;
   updateStatusBar: (updates: Partial<StatusBarConfig>) => void;
   toggleDarkMode: (isDark: boolean) => void;
-  toggleWatermark: (show: boolean) => void;
   wallpaper: string | null;
   setWallpaper: (url: string | null) => void;
   showKeyboard: boolean;
@@ -35,7 +33,6 @@ export const createAppSlice: StateCreator<ChatState, [], [], AppSlice> = (set, g
     wifi: true,
   },
   isDarkMode: false,
-  showWatermark: true,
   wallpaper: null,
   showKeyboard: false,
   phoneStyle: 'default',
@@ -66,7 +63,6 @@ export const createAppSlice: StateCreator<ChatState, [], [], AppSlice> = (set, g
       state.setThemBubbleColor(colors.them);
     }
   },
-  toggleWatermark: (show) => set({ showWatermark: show }),
   setWallpaper: (url) => set({ wallpaper: url }),
   toggleKeyboard: (show) => set({ showKeyboard: show }),
   setPhoneStyle: (style) => set({ phoneStyle: style }),
