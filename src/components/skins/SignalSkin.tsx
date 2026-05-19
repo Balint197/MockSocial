@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Video, Phone, MoreVertical, Plus, Camera, Mic, Sticker } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 // Signal Blue: #2c6bed
 // Signal Gray: #f6f6f6
@@ -19,13 +20,15 @@ export const SignalSkin = () => {
         <div className="flex items-center gap-4">
           <ArrowLeft className={`w-6 h-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`} />
           <div className="flex items-center gap-3">
-             {contact.avatar ? (
-                <img src={contact.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
-             ) : (
-                <div className="w-10 h-10 rounded-full bg-orange-400 flex items-center justify-center text-white font-bold text-lg">
-                  {contact.name.charAt(0)}
-                </div>
-             )}
+             <ContactAvatarUploadTrigger>
+               {contact.avatar ? (
+                  <img src={contact.avatar} alt="Avatar" className="w-10 h-10 rounded-full" />
+               ) : (
+                  <div className="w-10 h-10 rounded-full bg-orange-400 flex items-center justify-center text-white font-bold text-lg">
+                    {contact.name.charAt(0)}
+                  </div>
+               )}
+             </ContactAvatarUploadTrigger>
              <div className="flex flex-col">
                 <span className="font-semibold text-lg leading-tight">{contact.name}</span>
                 {contact.status && <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{contact.status}</span>}

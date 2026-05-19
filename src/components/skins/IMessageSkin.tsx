@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ChevronLeft, Info, Video, Phone, ArrowUp, Camera, Plus, Mic, AppWindow } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const IMessageSkin = () => {
   const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor, isTyping } = useChatStore();
@@ -19,15 +20,17 @@ export const IMessageSkin = () => {
         </div>
         
         <div className="flex-1 flex flex-col items-center justify-end pb-1">
-             <div className="w-12 h-12 bg-gray-300 rounded-full mb-1 overflow-hidden">
-                {contact.avatar ? (
-                     <img src={contact.avatar} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full bg-gradient-to-t from-gray-400 to-gray-300 flex items-center justify-center text-white text-xl font-medium">
-                        {contact.name.charAt(0)}
-                    </div>
-                )}
-             </div>
+             <ContactAvatarUploadTrigger className="mb-1">
+               <div className="w-12 h-12 bg-gray-300 rounded-full overflow-hidden">
+                  {contact.avatar ? (
+                       <img src={contact.avatar} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                      <div className="w-full h-full bg-gradient-to-t from-gray-400 to-gray-300 flex items-center justify-center text-white text-xl font-medium">
+                          {contact.name.charAt(0)}
+                      </div>
+                  )}
+               </div>
+             </ContactAvatarUploadTrigger>
              <div className="flex flex-col items-center">
                  <span className={`text-[12px] font-medium truncate max-w-[150px] ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{contact.name}</span>
                  <ChevronLeft className="w-3 h-3 text-gray-400 rotate-90 -mt-0.5" />

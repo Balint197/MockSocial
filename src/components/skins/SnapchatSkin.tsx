@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { Camera, Gamepad2, Smile, MessageCircle, Phone, Video, ChevronRight } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const SnapchatSkin = () => {
     const { contact, messages, isDarkMode } = useChatStore();
@@ -12,7 +13,7 @@ export const SnapchatSkin = () => {
             {/* Header */}
             <div className={`flex items-center justify-between px-4 pt-12 pb-2 backdrop-blur-md border-b-[0.5px] z-10 sticky top-0 shadow-sm ${isDarkMode ? 'bg-black/90 border-gray-800' : 'bg-white/90 border-gray-200'}`}>
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full p-0.5 overflow-hidden ring-2 ring-transparent transition-all cursor-pointer ${isDarkMode ? 'bg-gray-800 hover:ring-[#FFFC00]' : 'bg-gray-100 hover:ring-[#FFFC00]'}`}>
+                    <ContactAvatarUploadTrigger className={`w-10 h-10 rounded-full p-0.5 overflow-hidden ring-2 ring-transparent transition-all cursor-pointer ${isDarkMode ? 'bg-gray-800 hover:ring-[#FFFC00]' : 'bg-gray-100 hover:ring-[#FFFC00]'}`}>
                         {contact.avatar ? (
                             <img src={contact.avatar} alt="Bitmoji" className="w-full h-full object-cover rounded-full" />
                         ) : (
@@ -21,7 +22,7 @@ export const SnapchatSkin = () => {
                                 <Smile className="w-6 h-6" />
                             </div>
                         )}
-                    </div>
+                    </ContactAvatarUploadTrigger>
                     <div className="flex flex-col">
                         <span className={`font-bold text-[17px] leading-tight tracking-wide ${isDarkMode ? 'text-white' : 'text-black'}`}>{contact.name}</span>
                         <div className="flex items-center gap-1">

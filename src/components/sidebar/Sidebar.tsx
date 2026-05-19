@@ -53,6 +53,7 @@ import { Icons } from "@/components/shared/icons";
 import { UserAuthButton } from "@/components/shared/user-auth-button";
 import { ShareDialog } from "@/components/shared/share-dialog";
 import { useToast } from "@/components/shared/toast";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 import { useTheme } from "next-themes";
 import { AIChatDialog } from "@/components/shared/ai-chat-dialog";
 import { parseConversationImport } from "@/lib/import-conversation";
@@ -363,7 +364,7 @@ export const Sidebar = () => {
                 >
                   {/* Profile Header */}
                   <div className="flex items-start gap-4">
-                    <div className="shrink-0 relative group cursor-pointer">
+                    <ContactAvatarUploadTrigger className="shrink-0 relative group cursor-pointer">
                       <Avatar className="w-16 h-16 rounded-2xl border-2 border-border shadow-soft group-hover:border-primary/30 transition-all">
                         <AvatarImage src={store.contact.avatar || undefined} className="object-cover" />
                         <AvatarFallback className="bg-secondary rounded-2xl">
@@ -378,7 +379,7 @@ export const Sidebar = () => {
                           </span>
                         </div>
                       )}
-                    </div>
+                    </ContactAvatarUploadTrigger>
                     
                     <div className="flex-1 space-y-3 pt-0.5">
                       <div className="space-y-1.5">
@@ -432,31 +433,16 @@ export const Sidebar = () => {
                             placeholder="https://example.com/image.png"
                             />
                         </div>
-                        <input
-                            type="file"
-                            id="avatar-upload"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    const reader = new FileReader();
-                                    reader.onload = (ev) => {
-                                        store.updateContact({ avatar: ev.target?.result as string });
-                                    };
-                                    reader.readAsDataURL(file);
-                                }
-                            }}
-                        />
-                        <Button
+                        <ContactAvatarUploadTrigger>
+                          <Button
                             variant="outline"
                             size="icon"
                             className="h-10 w-10 shrink-0 bg-secondary/50 border-border hover:bg-background hover:border-primary/50 transition-all"
-                            onClick={() => document.getElementById('avatar-upload')?.click()}
                             title="Upload Image"
-                        >
+                          >
                             <Upload className="w-4 h-4 text-muted-foreground" />
-                        </Button>
+                          </Button>
+                        </ContactAvatarUploadTrigger>
                       </div>
                     </div>
                   </div>

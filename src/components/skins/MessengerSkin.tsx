@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Phone, Video, Info, Image as ImageIcon, Mic, ThumbsUp, PlusCircle, Smile } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const MessengerSkin = () => {
     const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
@@ -15,7 +16,7 @@ export const MessengerSkin = () => {
             <div className={`flex items-center justify-between px-4 pt-12 pb-3 shadow-[0_1px_2px_rgba(0,0,0,0.05)] z-10 sticky top-0 ${isDarkMode ? 'bg-black shadow-[0_1px_2px_rgba(255,255,255,0.05)]' : 'bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)]'}`}>
                 <div className="flex items-center gap-3">
                     <ArrowLeft className={`w-6 h-6 ${isDarkMode ? 'text-[#0084ff]' : 'text-[#0084ff]'}`} />
-                    <div className="relative">
+                    <ContactAvatarUploadTrigger className="relative">
                         {contact.avatar ? (
                             <img src={contact.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
                         ) : (
@@ -24,7 +25,7 @@ export const MessengerSkin = () => {
                             </div>
                         )}
                         <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white" />
-                    </div>
+                    </ContactAvatarUploadTrigger>
                     <div className="flex flex-col">
                         <span className={`font-semibold text-[17px] leading-tight ${isDarkMode ? 'text-white' : 'text-black'}`}>{contact.name}</span>
                         <span className="text-[12px] text-gray-500 font-normal">Active now</span>
@@ -56,7 +57,7 @@ export const MessengerSkin = () => {
                     return (
                         <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start gap-2"} mb-0.5`}>
                              {!isMe && isLastInGroup && (
-                                <div className="w-7 h-7 rounded-full bg-gray-200 overflow-hidden shrink-0 self-end mb-1">
+                                <ContactAvatarUploadTrigger className="w-7 h-7 rounded-full bg-gray-200 overflow-hidden shrink-0 self-end mb-1">
                                     {contact.avatar ? (
                                         <img src={contact.avatar} className="w-full h-full object-cover" />
                                     ) : (
@@ -64,7 +65,7 @@ export const MessengerSkin = () => {
                                             {contact.name.charAt(0)}
                                         </div>
                                     )}
-                                </div>
+                                </ContactAvatarUploadTrigger>
                             )}
                             {!isMe && !isLastInGroup && <div className="w-7 shrink-0" />}
 

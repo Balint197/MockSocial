@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, MoreHorizontal, Flag, Share2, Heart, Smile } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const TikTokSkin = () => {
     const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
@@ -33,7 +34,7 @@ export const TikTokSkin = () => {
              <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
                  {/* Profile Block (TikTok usually shows this at top of new DMs) */}
                  <div className="flex flex-col items-center justify-center my-6 gap-2">
-                      <div className={`w-20 h-20 rounded-full overflow-hidden border ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                      <ContactAvatarUploadTrigger className={`w-20 h-20 rounded-full overflow-hidden border ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                           {contact.avatar ? (
                              <img src={contact.avatar} className="w-full h-full object-cover" />
                           ) : (
@@ -41,7 +42,7 @@ export const TikTokSkin = () => {
                                  {contact.name.charAt(0)}
                              </div>
                           )}
-                      </div>
+                      </ContactAvatarUploadTrigger>
                       <div className="text-center">
                           <h3 className={`font-semibold text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>{contact.name}</h3>
                           <p className="text-sm text-gray-500">@{contact.name.toLowerCase().replace(/\s/g, '')} · TikTok User</p>
@@ -67,9 +68,9 @@ export const TikTokSkin = () => {
                          <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-1' : 'mt-2'}`}>
                              {/* TikTok Avatars in chat? Usually yes for 'them' */}
                              {!isMe && !isGrouped && (
-                                 <div className={`w-8 h-8 rounded-full overflow-hidden shrink-0 mr-2 self-end mb-1 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                                 <ContactAvatarUploadTrigger className={`w-8 h-8 rounded-full overflow-hidden shrink-0 mr-2 self-end mb-1 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                                      {contact.avatar ? <img src={contact.avatar} className="w-full h-full object-cover" /> : null}
-                                 </div>
+                                 </ContactAvatarUploadTrigger>
                              )}
                              {!isMe && isGrouped && <div className="w-10 mr-0" />}
 

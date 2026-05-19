@@ -4,6 +4,7 @@ import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, MoreVertical, Paperclip, Smile, Mic, Send } from "lucide-react";
 import { StatusBar } from "@/components/shared/StatusBar";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const TelegramSkin = () => {
     const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
@@ -21,13 +22,15 @@ export const TelegramSkin = () => {
                     <div className="flex items-center gap-4 flex-1">
                         <ArrowLeft className={`w-6 h-6 cursor-pointer ${isDarkMode ? 'text-white' : 'text-gray-500'}`} />
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                        {contact.avatar ? (
-                            <img src={contact.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
-                        ) : (
-                            <div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-lg">
-                                {contact.name.charAt(0)}
-                            </div>
-                        )}
+                        <ContactAvatarUploadTrigger>
+                            {contact.avatar ? (
+                                <img src={contact.avatar} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                            ) : (
+                                <div className="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold text-lg">
+                                    {contact.name.charAt(0)}
+                                </div>
+                            )}
+                        </ContactAvatarUploadTrigger>
                         <div className="flex flex-col overflow-hidden">
                             <span className={`font-semibold text-[16px] leading-tight truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{contact.name}</span>
                             <span className={`text-[13px] font-normal truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>last seen recently</span>

@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Video, Phone, MoreHorizontal, Image as ImageIcon, Smile, Type, Send, Paperclip } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const TeamsSkin = () => {
     const { contact, messages, isDarkMode, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
@@ -16,7 +17,7 @@ export const TeamsSkin = () => {
                 <div className="flex items-center gap-3">
                     <ArrowLeft className={`w-5 h-5 ${isDarkMode ? 'text-white' : 'text-[#616161]'}`} />
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full overflow-hidden relative">
+                        <ContactAvatarUploadTrigger className="w-8 h-8 rounded-full overflow-hidden relative">
                              {contact.avatar ? (
                                 <img src={contact.avatar} alt="Profile" className="w-full h-full object-cover" />
                              ) : (
@@ -25,7 +26,7 @@ export const TeamsSkin = () => {
                                 </div>
                              )}
                              <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
-                        </div>
+                        </ContactAvatarUploadTrigger>
                         <div className="flex flex-col">
                             <span className={`font-bold text-[14px] leading-tight ${isDarkMode ? 'text-white' : 'text-[#242424]'}`}>{contact.name}</span>
                             <span className={`text-[10px] ${isDarkMode ? 'text-[#a1a1a1]' : 'text-[#616161]'}`}>Available</span>

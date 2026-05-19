@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { Info, Plus, Smile, AtSign, Video, Mic, Search } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const SlackSkin = () => {
     const { contact, messages, isDarkMode } = useChatStore();
@@ -12,10 +13,10 @@ export const SlackSkin = () => {
             {/* Header */}
             <div className={`flex items-center justify-between px-4 pt-12 pb-3 border-b z-10 sticky top-0 shadow-sm ${isDarkMode ? 'bg-[#1a1d21] border-[#373a3e]' : 'bg-white border-gray-200'}`}>
                 <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 bg-gray-400 rounded flex items-center justify-center text-white font-bold text-xs relative overflow-hidden">
+                    <ContactAvatarUploadTrigger className="w-5 h-5 bg-gray-400 rounded flex items-center justify-center text-white font-bold text-xs relative overflow-hidden">
                         {contact.avatar && <img src={contact.avatar} className="w-full h-full object-cover" />}
                         {!contact.avatar && "#"}
-                    </div>
+                    </ContactAvatarUploadTrigger>
                     <span className={`font-bold text-[18px] leading-tight ${isDarkMode ? 'text-[#d1d2d3]' : 'text-[#1d1c1d]'}`}>{contact.name}</span>
                     <div className="w-2 h-2 rounded-full bg-green-500 mt-0.5"></div>
                 </div>
@@ -54,17 +55,21 @@ export const SlackSkin = () => {
                              {/* Avatar Column */}
                              <div className="w-9 shrink-0">
                                  {!isGrouped ? (
-                                     <div className={`w-9 h-9 rounded overflow-hidden ${isDarkMode ? 'bg-[#3f0e40]' : 'bg-blue-600'}`}>
-                                         {isMe ? (
+                                     isMe ? (
+                                         <div className={`w-9 h-9 rounded overflow-hidden ${isDarkMode ? 'bg-[#3f0e40]' : 'bg-blue-600'}`}>
                                              <div className="w-full h-full bg-[#3f0e40] flex items-center justify-center text-white font-bold text-xs">You</div>
-                                         ) : contact.avatar ? (
-                                             <img src={contact.avatar} className="w-full h-full object-cover" />
-                                         ) : (
-                                             <div className="w-full h-full bg-gray-400 flex items-center justify-center text-white font-bold text-sm">
-                                                 {contact.name.charAt(0)}
-                                             </div>
-                                         )}
-                                     </div>
+                                         </div>
+                                     ) : (
+                                         <ContactAvatarUploadTrigger className={`w-9 h-9 rounded overflow-hidden ${isDarkMode ? 'bg-[#3f0e40]' : 'bg-blue-600'}`}>
+                                             {contact.avatar ? (
+                                                 <img src={contact.avatar} className="w-full h-full object-cover" />
+                                             ) : (
+                                                 <div className="w-full h-full bg-gray-400 flex items-center justify-center text-white font-bold text-sm">
+                                                     {contact.name.charAt(0)}
+                                                 </div>
+                                             )}
+                                         </ContactAvatarUploadTrigger>
+                                     )
                                  ) : (
                                      <span className={`text-[10px] opacity-0 group-hover:opacity-100 w-full text-right block mt-1 ${isDarkMode ? 'text-[#ababad]' : 'text-gray-400'}`}>
                                          {msg.time.split(' ')[0]}

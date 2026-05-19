@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { ArrowLeft, Info, Image as ImageIcon, FileText, Smile, Send, Settings, User } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const XSkin = () => {
     const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor } = useChatStore();
@@ -29,13 +30,13 @@ export const XSkin = () => {
              <div className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-4">
                  {/* Empty State / Intro */}
                  <div className={`flex flex-col items-center justify-center py-6 border-b mb-2 ${isDarkMode ? 'border-[#2f3336]' : 'border-gray-100'}`}>
-                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 overflow-hidden border ${isDarkMode ? 'bg-slate-800 border-[#2f3336]' : 'bg-gray-100 border-gray-200'}`}>
+                      <ContactAvatarUploadTrigger className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 overflow-hidden border ${isDarkMode ? 'bg-slate-800 border-[#2f3336]' : 'bg-gray-100 border-gray-200'}`}>
                          {contact.avatar ? (
                              <img src={contact.avatar} className="w-full h-full object-cover" />
                          ) : (
                              <User className={`w-8 h-8 ${isDarkMode ? 'text-white' : 'text-gray-400'}`} />
                          )}
-                      </div>
+                      </ContactAvatarUploadTrigger>
                       <span className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>{contact.name}</span>
                       <span className="text-[#71767b] text-sm">@{(contact.name.toLowerCase().replace(/\s/g, ''))}</span>
                       <div className="flex items-center gap-4 mt-3 mb-1">
@@ -56,9 +57,9 @@ export const XSkin = () => {
                          <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-1' : 'mt-3'}`}>
                              {/* Avatar (Left only) */}
                              {!isMe && !isGrouped && (
-                                 <div className={`w-9 h-9 rounded-full mr-2 overflow-hidden shrink-0 self-end ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
+                                 <ContactAvatarUploadTrigger className={`w-9 h-9 rounded-full mr-2 overflow-hidden shrink-0 self-end ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
                                     {contact.avatar ? <img src={contact.avatar} className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center font-bold ${isDarkMode ? 'text-white' : 'text-gray-500'}`}>{contact.name.charAt(0)}</div>}
-                                 </div>
+                                 </ContactAvatarUploadTrigger>
                              )}
                              {!isMe && isGrouped && <div className="w-11 mr-0" />}
 

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusBar } from "@/components/shared/StatusBar";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const WhatsAppSkin = () => {
   const { contact, messages, isDarkMode, wallpaper, useCustomColors, meBubbleColor: storeMeColor, themBubbleColor: storeThemColor, isTyping } = useChatStore();
@@ -42,12 +43,14 @@ export const WhatsAppSkin = () => {
               </button>
               
               <div className="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer ml-1">
-                  <Avatar className="w-9 h-9 border border-white/10">
-                    <AvatarImage src={contact.avatar || undefined} className="object-cover" />
-                    <AvatarFallback className="bg-slate-200 text-slate-500 font-bold">
-                      {contact.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
+                  <ContactAvatarUploadTrigger>
+                    <Avatar className="w-9 h-9 border border-white/10">
+                      <AvatarImage src={contact.avatar || undefined} className="object-cover" />
+                      <AvatarFallback className="bg-slate-200 text-slate-500 font-bold">
+                        {contact.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </ContactAvatarUploadTrigger>
                   <div className="flex flex-col justify-center min-w-0 overflow-hidden">
                       <span className="text-[16px] font-semibold leading-tight truncate">{contact.name}</span>
                       <span className={`text-[12px] leading-tight truncate font-medium ${isTyping ? (isDarkMode ? 'text-[#00a884] opacity-100' : 'text-white opacity-100 font-semibold') : 'opacity-80'}`}>

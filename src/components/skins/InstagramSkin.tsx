@@ -6,6 +6,7 @@ import { ArrowLeft, Phone, Video, Camera, Mic, Image as ImageIcon, Heart, Smile,
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { Theme } from "emoji-picker-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 const EmojiPicker = dynamic(() => import("emoji-picker-react"), { ssr: false });
 
@@ -84,13 +85,15 @@ export const InstagramSkin = () => {
                     <div className="flex items-center gap-3">
                         <ArrowLeft className={`w-7 h-7 ${isDarkMode ? 'text-white' : 'text-black'}`} />
                         <div className="flex items-center gap-3">
-                            {contact.avatar ? (
-                                <img src={contact.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover" />
-                            ) : (
-                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">
-                                    {contact.name.charAt(0)}
-                                </div>
-                            )}
+                            <ContactAvatarUploadTrigger>
+                                {contact.avatar ? (
+                                    <img src={contact.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover" />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">
+                                        {contact.name.charAt(0)}
+                                    </div>
+                                )}
+                            </ContactAvatarUploadTrigger>
                             <div className="flex flex-col">
                                 <span className={`font-semibold text-[16px] leading-tight flex items-center gap-1 ${isDarkMode ? 'text-white' : 'text-black'}`}>
                                     {contact.name} 
@@ -132,7 +135,7 @@ export const InstagramSkin = () => {
                             className={`flex w-full ${isMe ? "justify-end" : "justify-start"} mb-0.5 items-end group`}
                         >
                              {!isMe && (
-                                <div className={`w-7 h-7 rounded-full overflow-hidden shrink-0 mr-2 ${!isLast ? 'invisible' : ''}`}>
+                                <ContactAvatarUploadTrigger className={`w-7 h-7 rounded-full overflow-hidden shrink-0 mr-2 ${!isLast ? 'invisible' : ''}`}>
                                      {contact.avatar ? (
                                          <img src={contact.avatar || ''} className="w-full h-full object-cover" />
                                      ) : (
@@ -140,7 +143,7 @@ export const InstagramSkin = () => {
                                             {contact.name.charAt(0)}
                                         </div>
                                      )}
-                                </div>
+                                </ContactAvatarUploadTrigger>
                              )}
 
                              <div

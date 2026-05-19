@@ -3,6 +3,7 @@
 import React from "react";
 import { useChatStore } from "@/store/useChatStore";
 import { Hash, Phone, Video, Users, Search, PlusCircle, Gift, Sticker, Smile, Send } from "lucide-react";
+import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-upload-trigger";
 
 export const DiscordSkin = () => {
     const { contact, messages, isDarkMode, wallpaper } = useChatStore();
@@ -27,9 +28,9 @@ export const DiscordSkin = () => {
              <div className={`flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-0.5 scrollbar-thin ${isDarkMode ? 'scrollbar-thumb-[#1a1b1e] scrollbar-track-[#2b2d31]' : 'scrollbar-thumb-[#e3e5e8] scrollbar-track-[#f2f3f5]'}`}>
                 {/* Introduction Placeholder */}
                  <div className="mt-4 mb-8 flex flex-col gap-2">
-                     <div className="w-[80px] h-[80px] rounded-full bg-gray-500 mb-2 overflow-hidden">
+                     <ContactAvatarUploadTrigger className="w-[80px] h-[80px] rounded-full bg-gray-500 mb-2 overflow-hidden">
                         {contact.avatar ? <img src={contact.avatar} className="w-full h-full object-cover" /> : null}
-                     </div>
+                     </ContactAvatarUploadTrigger>
                      <h3 className={`text-2xl font-bold max-w-full truncate ${isDarkMode ? 'text-white' : 'text-[#060607]'}`}>{contact.name}</h3>
                      <p className={`text-sm ${isDarkMode ? 'text-[#b5bac1]' : 'text-[#5c5e66]'}`}>This is the beginning of your direct message history with <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-[#060607]'}`}>@{contact.name}</span>.</p>
                  </div>
@@ -58,17 +59,19 @@ export const DiscordSkin = () => {
                              {/* Avatar Column */}
                              <div className="w-10 shrink-0 flex justify-center cursor-pointer select-none">
                                  {!isGrouped ? (
-                                    <div className="w-10 h-10 rounded-full bg-gray-600 overflow-hidden hover:opacity-80 transition-opacity mt-0.5">
-                                        {isMe ? (
-                                             <div className="w-full h-full bg-[#f23f43] flex items-center justify-center text-white font-bold text-xs">ME</div>
-                                        ) : contact.avatar ? (
-                                            <img src={contact.avatar} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full bg-[#5865f2] flex items-center justify-center text-white font-bold text-xs">
-                                                {contact.name.charAt(0)}
-                                            </div>
-                                        )}
-                                    </div>
+                                    isMe ? (
+                                        <div className="w-10 h-10 rounded-full bg-[#f23f43] flex items-center justify-center text-white font-bold text-xs overflow-hidden hover:opacity-80 transition-opacity mt-0.5">ME</div>
+                                    ) : (
+                                        <ContactAvatarUploadTrigger className="w-10 h-10 rounded-full bg-gray-600 overflow-hidden hover:opacity-80 transition-opacity mt-0.5">
+                                            {contact.avatar ? (
+                                                <img src={contact.avatar} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full bg-[#5865f2] flex items-center justify-center text-white font-bold text-xs">
+                                                    {contact.name.charAt(0)}
+                                                </div>
+                                            )}
+                                        </ContactAvatarUploadTrigger>
+                                    )
                                  ) : (
                                      <span className="text-[10px] text-[#949ba4] hidden group-hover:block mt-1.5 w-full text-right pr-1">
                                          {msg.time.split(' ')[0]} 
