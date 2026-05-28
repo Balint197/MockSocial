@@ -17,6 +17,7 @@ describe('Saved Mockups Slice', () => {
   it('saveMockup should create a snapshot with the correct fields', () => {
     const store = useChatStore.getState();
     store.updateContact({ name: 'Alice', status: 'Online', avatar: null });
+    store.setScreenWidth(512);
     store.saveMockup('My Chat');
 
     const { savedMockups } = useChatStore.getState();
@@ -26,6 +27,7 @@ describe('Saved Mockups Slice', () => {
     expect(snap.name).toBe('My Chat');
     expect(snap.contact.name).toBe('Alice');
     expect(snap.platform).toBe('signal'); // default platform
+    expect(snap.screenWidth).toBe(512);
     expect(typeof snap.id).toBe('string');
     expect(typeof snap.createdAt).toBe('number');
   });
@@ -42,16 +44,18 @@ describe('Saved Mockups Slice', () => {
     expect(savedMockups[1].name).toBe('First');
   });
 
-  it('loadMockup should restore platform and contact from snapshot', () => {
+  it('loadMockup should restore platform, contact, and screen width from snapshot', () => {
     const store = useChatStore.getState();
     // Set up initial state and save
     store.setPlatform('whatsapp');
     store.updateContact({ name: 'Bob' });
+    store.setScreenWidth(560);
     store.saveMockup('Bob on WhatsApp');
 
     // Change state
     store.setPlatform('discord');
     store.updateContact({ name: 'Changed' });
+    store.setScreenWidth(310);
 
     // Restore
     const savedId = useChatStore.getState().savedMockups[0].id;
@@ -60,6 +64,7 @@ describe('Saved Mockups Slice', () => {
     const state = useChatStore.getState();
     expect(state.platform).toBe('whatsapp');
     expect(state.contact.name).toBe('Bob');
+    expect(state.screenWidth).toBe(560);
   });
 
   it('deleteMockup should remove the item from the array', () => {

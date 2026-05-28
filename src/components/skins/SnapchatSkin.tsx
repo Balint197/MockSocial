@@ -43,7 +43,7 @@ export const SnapchatSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1 w-full relative">
+            <div data-message-export-container className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1 w-full relative">
                  {/* Snap Date Header */}
                  <div className="flex justify-center mb-6 mt-2">
                      <span className="text-[11px] font-bold text-gray-400 tracking-wider uppercase">
@@ -57,7 +57,7 @@ export const SnapchatSkin = () => {
                      const isGrouped = prevMsg && prevMsg.sender === msg.sender;
 
                      return (
-                         <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-0.5' : 'mt-2'}`}>
+                         <div key={msg.id} data-message-export-item className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-0.5' : 'mt-2'}`}>
                              {/* Vertical Line Indicator (Snapchat style) */}
                              {!isMe && !isGrouped && (
                                 <div className={`flex flex-col gap-1 items-center mr-2 self-end w-4 shrink-0`}>

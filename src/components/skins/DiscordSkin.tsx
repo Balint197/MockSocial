@@ -25,7 +25,7 @@ export const DiscordSkin = () => {
              </div>
 
              {/* Messages */}
-             <div className={`flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-0.5 scrollbar-thin ${isDarkMode ? 'scrollbar-thumb-[#1a1b1e] scrollbar-track-[#2b2d31]' : 'scrollbar-thumb-[#e3e5e8] scrollbar-track-[#f2f3f5]'}`}>
+             <div data-message-export-container className={`flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-0.5 scrollbar-thin ${isDarkMode ? 'scrollbar-thumb-[#1a1b1e] scrollbar-track-[#2b2d31]' : 'scrollbar-thumb-[#e3e5e8] scrollbar-track-[#f2f3f5]'}`}>
                 {/* Introduction Placeholder */}
                  <div className="mt-4 mb-8 flex flex-col gap-2">
                      <ContactAvatarUploadTrigger className="w-[80px] h-[80px] rounded-full bg-gray-500 mb-2 overflow-hidden">
@@ -50,6 +50,7 @@ export const DiscordSkin = () => {
                      return (
                          <div 
                             key={msg.id} 
+                            data-message-export-item
                             className={`
                                 group flex items-start gap-4 py-0.5 pr-4 pl-0 -ml-2 -mr-2 rounded px-2
                                 ${!isGrouped ? 'mt-3.5' : ''}

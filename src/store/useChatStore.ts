@@ -5,12 +5,13 @@ import { createChatSlice, ChatSlice } from './slices/createChatSlice';
 import { createPostSlice, PostSlice } from './slices/createPostSlice';
 import { createSavedMockupsSlice, SavedMockupsSlice } from './slices/createSavedMockupsSlice';
 import { generateRandomContact, generateRandomMessages, generateRandomPost } from '@/lib/autofill-utils';
+import { getPhoneStyleWidth, type PhoneStyle } from '@/lib/phone-dimensions';
 
 export type Platform = 'signal' | 'imessage' | 'whatsapp' | 'discord' | 'instagram' | 'messenger' | 'telegram' | 'twitter' | 'slack' | 'teams' | 'x' | 'snapchat' | 'tiktok' | 'linkedin' | 'threads';
 export type Sender = 'me' | 'them';
 export type MessageStatus = 'sent' | 'delivered' | 'read';
 export type MockupType = 'chat' | 'post';
-export type PhoneStyle = 'default' | 'mini' | 'pro';
+export type { PhoneStyle };
 export type ExportQuality = 1 | 2 | 3;
 
 export interface PostConfig {
@@ -107,7 +108,7 @@ export const useChatStore = create<ChatState>()(
     },
     {
       name: 'chat-mockup-storage',
-      version: 2, // Bumped: added savedMockups
+      version: 3, // Bumped: added custom screen width
       migrate: (persistedState: any, version: number) => {
         if (version === 0) {
           // Ensure phoneStyle exists for very old state
@@ -116,6 +117,9 @@ export const useChatStore = create<ChatState>()(
         if (version < 2) {
           // Seed empty savedMockups array for users upgrading from v1
           persistedState.savedMockups = [];
+        }
+        if (version < 3) {
+          persistedState.screenWidth = getPhoneStyleWidth(persistedState.phoneStyle ?? 'default');
         }
         return persistedState as ChatState;
       },
@@ -129,6 +133,7 @@ export const useChatStore = create<ChatState>()(
         postConfig: state.postConfig,
         isDarkMode: state.isDarkMode,
         phoneStyle: state.phoneStyle,
+        screenWidth: state.screenWidth,
         exportQuality: state.exportQuality,
         savedMockups: state.savedMockups,
         useCustomColors: state.useCustomColors,

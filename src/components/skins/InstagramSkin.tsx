@@ -110,7 +110,7 @@ export const InstagramSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-1.5 ">
+            <div data-message-export-container className="flex-1 overflow-y-auto p-4 flex flex-col gap-1.5 ">
                  {/* Date Header */}
                  <div className="flex justify-center mb-4 mt-2">
                      <span className="text-[12px] font-medium text-gray-400">
@@ -132,6 +132,7 @@ export const InstagramSkin = () => {
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.2 }}
                             key={msg.id} 
+                            data-message-export-item
                             className={`flex w-full ${isMe ? "justify-end" : "justify-start"} mb-0.5 items-end group`}
                         >
                              {!isMe && (
@@ -177,7 +178,8 @@ export const InstagramSkin = () => {
                                  )}
                              </div>
                              {isMe && isLast && (
-                                 <motion.span 
+                                 <motion.span
+                                    data-message-export-exclude
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     className={`text-[10px] ml-1 mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}

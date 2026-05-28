@@ -43,7 +43,7 @@ export const IMessageSkin = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-1 relative z-10">
+      <div data-message-export-container className="flex-1 overflow-y-auto p-4 space-y-1 relative z-10">
         <div className="flex justify-center my-6">
             <span className="text-[10px] text-gray-400 font-medium">iMessage</span>
             <span className="text-[10px] text-gray-400 ml-1">Today {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
@@ -64,6 +64,7 @@ export const IMessageSkin = () => {
            return (
             <div
               key={msg.id}
+              data-message-export-item
               className={`flex flex-col w-full ${isMe ? "items-end" : "items-start"} mb-1`}
             >
                {/* Reply Block */}
@@ -116,7 +117,7 @@ export const IMessageSkin = () => {
            );
         })}
         {messages.length > 0 && messages[messages.length-1].sender === 'me' && !isTyping && (
-             <div className="flex justify-end pr-1">
+             <div data-message-export-exclude className="flex justify-end pr-1">
                  <span className="text-[10px] text-gray-400 font-medium">Delivered</span>
              </div>
         )}

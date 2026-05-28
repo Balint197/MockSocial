@@ -14,6 +14,7 @@ describe('App Slice Management', () => {
         expect(state.isDarkMode).toBe(false);
         expect(state.showKeyboard).toBe(false);
         expect(state.phoneStyle).toBe('default');
+        expect(state.screenWidth).toBe(340);
     });
 
     it('should toggle dark mode properly', () => {
@@ -29,5 +30,21 @@ describe('App Slice Management', () => {
         const { setPhoneStyle } = useChatStore.getState();
         setPhoneStyle('pro');
         expect(useChatStore.getState().phoneStyle).toBe('pro');
+        expect(useChatStore.getState().screenWidth).toBe(375);
+    });
+
+    it('should set an arbitrary screen width', () => {
+        const { setScreenWidth } = useChatStore.getState();
+        setScreenWidth(512);
+        expect(useChatStore.getState().screenWidth).toBe(512);
+    });
+
+    it('should clamp screen width to the supported slider range', () => {
+        const { setScreenWidth } = useChatStore.getState();
+        setScreenWidth(100);
+        expect(useChatStore.getState().screenWidth).toBe(280);
+
+        setScreenWidth(999);
+        expect(useChatStore.getState().screenWidth).toBe(640);
     });
 });

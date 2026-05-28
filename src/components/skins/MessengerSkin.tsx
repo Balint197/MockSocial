@@ -39,7 +39,7 @@ export const MessengerSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-1.5 pt-4">
+            <div data-message-export-container className="flex-1 overflow-y-auto p-4 flex flex-col gap-1.5 pt-4">
                {/* Time Separator */}
                 <div className="flex justify-center mb-6 mt-2">
                     <span className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">
@@ -55,7 +55,7 @@ export const MessengerSkin = () => {
                     const isFirstInGroup = !prevMsg || prevMsg.sender !== msg.sender;
 
                     return (
-                        <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start gap-2"} mb-0.5`}>
+                        <div key={msg.id} data-message-export-item className={`flex w-full ${isMe ? "justify-end" : "justify-start gap-2"} mb-0.5`}>
                              {!isMe && isLastInGroup && (
                                 <ContactAvatarUploadTrigger className="w-7 h-7 rounded-full bg-gray-200 overflow-hidden shrink-0 self-end mb-1">
                                     {contact.avatar ? (
@@ -93,7 +93,7 @@ export const MessengerSkin = () => {
                             
                             {/* Read Receipt (Mock) - Show only on last message sent by me */}
                             {isMe && index === messages.length - 1 && (
-                                <div className="w-3.5 h-3.5 rounded-full bg-gray-200 border border-white overflow-hidden self-end mb-1 ml-1">
+                                <div data-message-export-exclude className="w-3.5 h-3.5 rounded-full bg-gray-200 border border-white overflow-hidden self-end mb-1 ml-1">
                                      {contact.avatar ? (
                                         <img src={contact.avatar || ''} className="w-full h-full object-cover" />
                                     ) : (

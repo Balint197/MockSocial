@@ -29,7 +29,7 @@ export const SlackSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className={`flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-2 ${isDarkMode ? 'scrollbar-thin scrollbar-thumb-gray-600' : ''}`}>
+            <div data-message-export-container className={`flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-2 ${isDarkMode ? 'scrollbar-thin scrollbar-thumb-gray-600' : ''}`}>
                  {/* Date Divider */}
                 <div className="relative py-4 flex items-center justify-center">
                     <div className="absolute inset-0 flex items-center">
@@ -51,7 +51,7 @@ export const SlackSkin = () => {
                      
                      // Slack message format
                      return (
-                         <div key={msg.id} className={`group flex gap-2.5 ${!isGrouped ? 'mt-2' : '-mt-1'} ${isDarkMode ? 'hover:bg-[#222529]' : 'hover:bg-gray-50'} -mx-5 px-5 py-1`}>
+                         <div key={msg.id} data-message-export-item className={`group flex gap-2.5 ${!isGrouped ? 'mt-2' : '-mt-1'} ${isDarkMode ? 'hover:bg-[#222529]' : 'hover:bg-gray-50'} -mx-5 px-5 py-1`}>
                              {/* Avatar Column */}
                              <div className="w-9 shrink-0">
                                  {!isGrouped ? (

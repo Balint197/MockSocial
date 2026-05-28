@@ -40,7 +40,7 @@ export const TeamsSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
+            <div data-message-export-container className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4">
                  <div className="flex justify-center mb-2">
                      <span className={`text-[12px] font-medium ${isDarkMode ? 'text-[#a1a1a1]' : 'text-[#616161]'}`}>Yesterday</span>
                  </div>
@@ -48,7 +48,7 @@ export const TeamsSkin = () => {
                  {messages.map((msg, index) => {
                      const isMe = msg.sender === 'me';
                      return (
-                         <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"}`}>
+                         <div key={msg.id} data-message-export-item className={`flex w-full ${isMe ? "justify-end" : "justify-start"}`}>
                              <div className={`flex flex-col max-w-[80%] ${isMe ? "items-end" : "items-start"}`}>
                                  <div className="flex items-center gap-2 mb-1">
                                      <span className={`text-[10px] font-semibold ${isDarkMode ? 'text-[#a1a1a1]' : 'text-[#616161]'}`}>{isMe ? 'You' : contact.name.split(' ')[0]}</span>

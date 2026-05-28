@@ -57,6 +57,7 @@ import { ContactAvatarUploadTrigger } from "@/components/shared/contact-avatar-u
 import { useTheme } from "next-themes";
 import { AIChatDialog } from "@/components/shared/ai-chat-dialog";
 import { parseConversationImport } from "@/lib/import-conversation";
+import { SCREEN_WIDTH_MAX, SCREEN_WIDTH_MIN } from "@/lib/phone-dimensions";
 
 interface PlatformItem {
   id: Platform;
@@ -953,6 +954,32 @@ export const Sidebar = () => {
                                     </button>
                                 ))}
                             </div>
+                       </div>
+
+                       <div className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                                <label className="text-[11px] font-medium text-foreground ml-0.5">Screen Width</label>
+                                <div className="flex items-center gap-1">
+                                    <Input
+                                        type="number"
+                                        min={SCREEN_WIDTH_MIN}
+                                        max={SCREEN_WIDTH_MAX}
+                                        value={store.screenWidth}
+                                        onChange={(e) => store.setScreenWidth(Number(e.target.value))}
+                                        className="h-7 w-16 px-2 text-right text-[11px] bg-secondary/50 border-border"
+                                    />
+                                    <span className="text-[10px] text-muted-foreground">px</span>
+                                </div>
+                            </div>
+                            <input
+                                type="range"
+                                min={SCREEN_WIDTH_MIN}
+                                max={SCREEN_WIDTH_MAX}
+                                step={1}
+                                value={store.screenWidth}
+                                onChange={(e) => store.setScreenWidth(Number(e.target.value))}
+                                className="w-full h-1.5 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                            />
                        </div>
 
                        <div className="flex items-center justify-between mt-3">

@@ -8,6 +8,7 @@ import {
   PostConfig,
   PhoneStyle,
 } from '../useChatStore';
+import { getPhoneStyleWidth } from '@/lib/phone-dimensions';
 
 export interface SavedMockup {
   id: string;
@@ -22,6 +23,7 @@ export interface SavedMockup {
   isDarkMode: boolean;
   wallpaper: string | null;
   phoneStyle: PhoneStyle;
+  screenWidth: number;
 }
 
 // The slice only needs read access to the rest of the store when saving,
@@ -53,6 +55,7 @@ export const createSavedMockupsSlice: StateCreator<any, [], [], SavedMockupsSlic
         isDarkMode: state.isDarkMode as boolean,
         wallpaper: state.wallpaper as string | null,
         phoneStyle: state.phoneStyle as PhoneStyle,
+        screenWidth: state.screenWidth as number,
       };
       set((s: SavedMockupsSlice) => ({ savedMockups: [snapshot, ...s.savedMockups] }));
     },
@@ -71,6 +74,7 @@ export const createSavedMockupsSlice: StateCreator<any, [], [], SavedMockupsSlic
         isDarkMode: snap.isDarkMode,
         wallpaper: snap.wallpaper,
         phoneStyle: snap.phoneStyle,
+        screenWidth: snap.screenWidth ?? getPhoneStyleWidth(snap.phoneStyle),
       });
     },
 

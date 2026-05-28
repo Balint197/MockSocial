@@ -27,7 +27,7 @@ export const XSkin = () => {
              </div>
 
              {/* Messages */}
-             <div className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-4">
+             <div data-message-export-container className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-4">
                  {/* Empty State / Intro */}
                  <div className={`flex flex-col items-center justify-center py-6 border-b mb-2 ${isDarkMode ? 'border-[#2f3336]' : 'border-gray-100'}`}>
                       <ContactAvatarUploadTrigger className={`w-16 h-16 rounded-full flex items-center justify-center mb-2 overflow-hidden border ${isDarkMode ? 'bg-slate-800 border-[#2f3336]' : 'bg-gray-100 border-gray-200'}`}>
@@ -54,7 +54,7 @@ export const XSkin = () => {
                      const isGrouped = prevMsg && prevMsg.sender === msg.sender;
 
                      return (
-                         <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-1' : 'mt-3'}`}>
+                         <div key={msg.id} data-message-export-item className={`flex w-full ${isMe ? "justify-end" : "justify-start"} ${isGrouped ? 'mt-1' : 'mt-3'}`}>
                              {/* Avatar (Left only) */}
                              {!isMe && !isGrouped && (
                                  <ContactAvatarUploadTrigger className={`w-9 h-9 rounded-full mr-2 overflow-hidden shrink-0 self-end ${isDarkMode ? 'bg-slate-700' : 'bg-gray-200'}`}>
@@ -86,7 +86,7 @@ export const XSkin = () => {
                  })}
                  {/* Seen check */}
                  {messages.length > 0 && messages[messages.length-1].sender === 'me' && (
-                     <div className="flex justify-end pr-1">
+                     <div data-message-export-exclude className="flex justify-end pr-1">
                          <span className="ml-auto w-4 h-4 rounded-full border border-[#71767b] p-0.5 flex items-center justify-center">
                              <span className="w-full h-full rounded-full bg-[#1d9bf0]"></span>
                          </span>

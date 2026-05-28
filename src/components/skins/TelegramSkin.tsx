@@ -42,7 +42,7 @@ export const TelegramSkin = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 relative z-0 pb-4">
+            <div data-message-export-container className="flex-1 overflow-y-auto p-3 flex flex-col gap-2 relative z-0 pb-4">
                  {/* Date Header */}
                  <div className="flex justify-center my-2 sticky top-2 z-10">
                      <span className="bg-[#00000040] text-white px-2.5 py-0.5 rounded-full text-[12px] font-medium backdrop-blur-sm">
@@ -53,7 +53,7 @@ export const TelegramSkin = () => {
                  {messages.map((msg) => {
                      const isMe = msg.sender === 'me';
                      return (
-                         <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} mb-1`}>
+                         <div key={msg.id} data-message-export-item className={`flex w-full ${isMe ? "justify-end" : "justify-start"} mb-1`}>
                              <div 
                                 className={`
                                     relative px-3 py-1.5 min-w-[80px] max-w-[75%] rounded-lg shadow-sm text-[15px] leading-snug
@@ -78,7 +78,7 @@ export const TelegramSkin = () => {
                                      <span className="text-[11px] font-normal">{msg.time}</span>
                                      {isMe && (
                                          // Telegram double check
-                                         <svg viewBox="0 0 18 18" className="w-3.5 h-3.5 fill-current">
+                                         <svg data-message-export-exclude viewBox="0 0 18 18" className="w-3.5 h-3.5 fill-current">
                                              <path d="M16.035 3.32a.774.774 0 00-1.096-.002l-8.52 8.65-3.054-2.903a.774.774 0 10-1.077 1.135l3.635 3.454a.774.774 0 001.118-.022l9.043-9.186a.774.774 0 00-.05-1.127z" />
                                          </svg>
                                      )}
